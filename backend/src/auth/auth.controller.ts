@@ -8,9 +8,10 @@ import {
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
-import { LoginDto } from './login.dto';
+import { LoginDto } from '../user/dto/login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { UserService } from 'src/user/user.service';
+import { UserPayload } from './jwt.strategy';
 
 @Controller('auth')
 export class AuthController {
@@ -26,8 +27,8 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard)
     @Get() // localhost:3000/auth
-    async authenticate(@Request() req) {
-        const res = this.userService.getUser(req.user.userId);
+    async authenticate(@Request() req: { user: UserPayload }) {
+        const res = this.userService.getUserById(req.user.userId);
         return res;
     }
 }

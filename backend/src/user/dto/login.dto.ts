@@ -1,8 +1,8 @@
-// src/auth/login.dto.ts
+// src/auth/dto/login.dto.ts
 import { IsEmail, IsString } from 'class-validator';
 
 export class LoginDto {
-    @IsEmail() // Validation de l'email
+    @IsEmail({}, { message: 'Vous devez fournir une adresse mail valide.' }) // Validation de l'email
     email: string;
 
     @IsString() // Validation du mot de passe
