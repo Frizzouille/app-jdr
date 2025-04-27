@@ -1,14 +1,33 @@
-// src/auth/auth.controller.ts
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+    Controller,
+    Post,
+    Body,
+    Get,
+    UseGuards,
+    Request,
+} from '@nestjs/common';
+
 import { AuthService } from './auth.service';
 import { LoginDto } from './login.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { UserService } from 'src/user/user.service';
 
-@Controller('auth') // Ce sera le préfixe de toutes les routes liées à l'authentification
+@Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+    constructor(
+        private readonly authService: AuthService,
+        private readonly userService: UserService,
+    ) {}
 
-  @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
-  }
+    @Post('login') // localhost:3000/auth/login
+    async login(@Body() LoginDto: LoginDto) {
+        return this.authService.login(LoginDto);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get() // localhost:3000/auth
+    async authenticate(@Request() req) {
+        const res = this.userService.getUser(req.user.userId);
+        return res;
+    }
 }

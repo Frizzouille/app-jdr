@@ -1,17 +1,20 @@
-// src/auth/auth.module.ts
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtModule } from '@nestjs/jwt'; // Pour gérer les tokens JWT
+import { JwtStrategy } from './jwt.strategy';
+import { UserService } from 'src/user/user.service';
 
 @Module({
-  imports: [
-    JwtModule.register({
-      secret: 'SECRET_KEY',  // Utiliser un secret robuste en production
-      signOptions: { expiresIn: '1h' }, // Durée de validité du token
-    }),
-  ],
-  controllers: [AuthController],  // Ajoute le contrôleur ici
-  providers: [AuthService],      // Ajoute le service ici
+    imports: [
+        JwtModule.register({
+            global: true,
+            secret: process.env.JWT_SECRET,
+            signOptions: { expiresIn: '1h' },
+        }),
+    ],
+    controllers: [AuthController],
+    providers: [AuthService, UserService, JwtStrategy],
 })
 export class AuthModule {}

@@ -1,4 +1,14 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
-@Module({})
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './user/user.module';
+
+@Module({
+    imports: [
+        ConfigModule.forRoot({ isGlobal: true }),
+        AuthModule,
+        UsersModule,
+    ],
+})
 export class AppModule {}
