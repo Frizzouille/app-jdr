@@ -6,8 +6,9 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../types/navigation';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-const HomeScreen = () => {
-    const route = useRoute<RouteProp<RootStackParamList, 'Accueil'>>();
+type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Accueil'>;
+
+const HomeScreen = ({ route }: { route: HomeScreenRouteProp }) => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const { dataUser, updateAccessToken } = route.params;

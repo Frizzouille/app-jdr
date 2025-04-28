@@ -4,8 +4,16 @@ export type RootStackParamList = {
             React.SetStateAction<string | undefined>
         >;
     };
+    Register: {
+        updateAccessToken: React.Dispatch<
+            React.SetStateAction<string | undefined>
+        >;
+    };
     Accueil: {
-        dataUser: Object;
+        dataUser: {
+            id: string | undefined;
+            email: string | undefined;
+        };
         updateAccessToken: React.Dispatch<
             React.SetStateAction<string | undefined>
         >;

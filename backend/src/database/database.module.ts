@@ -6,7 +6,7 @@ if (!process.env.MONGODB_USER || !process.env.MONGODB_PASSWORD) {
 }
 
 const user = encodeURIComponent(process.env.MONGODB_USER);
-const password = encodeURIComponent(process.env.MONGODB_PASSWORD || '');
+const password = encodeURIComponent(process.env.MONGODB_PASSWORD);
 const uri = `mongodb+srv://${user}:${password}@cluster0.jwl0m7q.mongodb.net/app-jdr`;
 
 @Module({

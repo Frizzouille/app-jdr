@@ -29,7 +29,8 @@ export class AuthService {
             throw new UnauthorizedException('Identifiants incorrects');
         }
 
-        return this.authenticateUser({ userId: user.id }); // Le token est retourné au frontend
+        const { access_token } = this.authenticateUser({ userId: user.id }); // Le token est retourné au frontend
+        return { access_token, email };
     }
 
     // Compare un mot (password) avec sa version hash (hashedPassword)

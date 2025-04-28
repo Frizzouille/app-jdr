@@ -9,6 +9,7 @@ import API from './services/api'; // ajuste le chemin selon ta structure
 
 import LoginScreen from './src/pages/LoginScreen';
 import HomeScreen from './src/pages/HomeScreen';
+import RegisterScreen from './src/pages/RegisterScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -17,7 +18,10 @@ export default function App() {
         localStorage.getItem('accessToken') ?? undefined,
     );
 
-    const [dataUser, setDataUser] = useState({ id: null });
+    const [dataUser, setDataUser] = useState({
+        id: undefined,
+        email: undefined,
+    });
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -71,6 +75,13 @@ export default function App() {
                     component={HomeScreen}
                     initialParams={{
                         dataUser: dataUser,
+                        updateAccessToken: updateAccessToken,
+                    }}
+                />
+                <Stack.Screen
+                    name="Register"
+                    component={RegisterScreen}
+                    initialParams={{
                         updateAccessToken: updateAccessToken,
                     }}
                 />

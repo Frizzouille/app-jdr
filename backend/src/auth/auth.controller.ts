@@ -5,6 +5,9 @@ import {
     Get,
     UseGuards,
     Request,
+    HttpCode,
+    HttpStatus,
+    NotFoundException,
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
@@ -21,14 +24,22 @@ export class AuthController {
     ) {}
 
     @Post('login') // localhost:3000/auth/login
-    async login(@Body() LoginDto: LoginDto) {
-        return this.authService.login(LoginDto);
+    @HttpCode(HttpStatus.OK)
+    async login(@Body() loginDto: LoginDto) {
+        return this.authService.login(loginDto);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get() // localhost:3000/auth
+    @HttpCode(HttpStatus.OK)
     async authenticate(@Request() req: { user: UserPayload }) {
-        const res = this.userService.getUserById(req.user.userId);
-        return res;
+        const res = await this.userService.getUserById(req.user.userId);
+
+        if (!res) {
+            throw new NotFoundException('Utilisateur non trouvé');
+        }
+
+        const { email } = res;
+        return { email };
     }
 }

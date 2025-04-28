@@ -12,10 +12,10 @@ export class User {
     @Prop({ default: () => cuid() }) // Utilisation de cuid pour générer un id unique par défaut
     id: string;
 
-    @Prop({ unique: true })
+    @Prop({ unique: true, required: true })
     email: string;
 
-    @Prop()
+    @Prop({ required: true })
     password: string;
 }
 

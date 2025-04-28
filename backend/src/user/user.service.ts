@@ -32,7 +32,7 @@ export class UserService {
             password: hashedPassword,
         });
         try {
-            return createdUser.save();
+            return await createdUser.save();
         } catch (e) {
             throw new HttpException(
                 e.message ||
@@ -44,12 +44,12 @@ export class UserService {
 
     // Trouver un utilisateur par email
     async getUserByEmail(email: string): Promise<User | null> {
-        return this.userModel.findOne({ email }).exec();
+        return await this.userModel.findOne({ email }).exec();
     }
 
     // Trouver un utilisateur par email
-    async getUserById(cuid: string): Promise<User | null> {
-        return this.userModel.findOne({ cuid }).exec();
+    async getUserById(id: string): Promise<User | null> {
+        return await this.userModel.findOne({ id }).exec();
     }
 
     // Hash un mdp // Utilisation pour création ou modification du mdp d'un user

@@ -4,17 +4,18 @@ import {
     Text,
     TextInput,
     Button,
+    //@ts-ignore Ajouter pour désactiver une erreur dans vscode
     CheckBox,
-    StyleSheet,
 } from 'react-native';
 import { AxiosError } from 'axios'; // Import de AxiosError
 
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../types/navigation';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
-import API from '../../services/api'; // ajuste le chemin selon ta structure
+import { RootStackParamList } from '../../types/navigation';
+import API from '../../services/api';
+import { loginStyle } from '../../styles/LoginScreen.styles';
 
 const LoginScreen = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'Login'>>();
@@ -40,7 +41,7 @@ const LoginScreen = () => {
             }
 
             navigation.navigate('Accueil', {
-                accessToken: accessToken,
+                dataUser: response.data,
                 updateAccessToken: updateAccessToken,
             });
         } catch (error) {
@@ -58,61 +59,41 @@ const LoginScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Connexion</Text>
+        <View style={loginStyle.container}>
+            <Text style={loginStyle.title}>Connexion</Text>
 
             <TextInput
-                style={styles.input}
+                style={loginStyle.input}
                 placeholder="Email"
                 onChangeText={setEmail}
                 value={email}
             />
 
             <TextInput
-                style={styles.input}
+                style={loginStyle.input}
                 placeholder="Mot de passe"
                 secureTextEntry
                 onChangeText={setPassword}
                 value={password}
             />
-            <View style={styles.checkboxContainer}>
+            <View style={loginStyle.checkboxContainer}>
                 <CheckBox value={rememberMe} onValueChange={setRememberMe} />
-                <Text style={styles.checkboxLabel}>Se souvenir de moi</Text>
+                <Text style={loginStyle.checkboxLabel}>Se souvenir de moi</Text>
             </View>
-            <Button title="Se connecter" onPress={handleLogin} />
+            <View style={loginStyle.button}>
+                <Button title="Se connecter" onPress={handleLogin} />
+            </View>
+            <View style={loginStyle.button}>
+                <Button
+                    title="Créer un compte"
+                    onPress={() =>
+                        navigation.navigate('Register', { updateAccessToken })
+                    }
+                    color="#00a35c"
+                />
+            </View>
         </View>
     );
 };
 
 export default LoginScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 24,
-        backgroundColor: '#f0f0f0',
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        marginBottom: 24,
-        textAlign: 'center',
-    },
-    input: {
-        backgroundColor: 'white',
-        padding: 12,
-        marginBottom: 16,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#ccc',
-    },
-    checkboxContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 16,
-    },
-    checkboxLabel: {
-        marginLeft: 8,
-    },
-});
