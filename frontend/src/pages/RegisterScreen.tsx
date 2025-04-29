@@ -1,23 +1,36 @@
-import { useState } from 'react';
+// src/pages/RegisterScreen.tsx
+import { useEffect, useState } from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '../../types/navigation';
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import API from '../../services/api'; // ajuste le chemin selon ta structure
-import { loginStyle } from '../../styles/LoginScreen.styles';
+// API
 import axios from 'axios';
+import API from '../services/api'; // ajuste le chemin selon ta structure
+
+// Navigation
+import { RootStackParamList } from '../navigation/navigationType';
+
+// Style
+import { loginStyle } from '../styles/loginScreen.styles';
+
+// Context
+import { useUser } from '../context/userContext';
 
 export default function RegisterScreen() {
-    const route = useRoute<RouteProp<RootStackParamList, 'Login'>>();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+    const { dataUser, setDataUser } = useUser();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmedPassword, setConfirmedPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState<string[]>([]);
+    const [shouldRedirect, setShouldRedirect] = useState(false);
 
-    const { updateAccessToken } = route.params;
+    useEffect(() => {
+        if (dataUser?.id && dataUser?.email) navigation.navigate('Home');
+    }, [shouldRedirect]);
 
     const handleRegister = async () => {
         let isValidRegister = true;
@@ -49,10 +62,9 @@ export default function RegisterScreen() {
                 email,
                 password,
             });
-            navigation.navigate('Accueil', {
-                dataUser: response.data,
-                updateAccessToken: updateAccessToken,
-            });
+
+            setDataUser(response.data);
+            setShouldRedirect(true);
         } catch (error: unknown) {
             if (axios.isAxiosError(error) && error.response) {
                 const data = error.response.data;

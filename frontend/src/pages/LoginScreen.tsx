@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// src/pages/LoginScreen.tsx
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -7,25 +8,37 @@ import {
     //@ts-ignore Ajouter pour désactiver une erreur dans vscode
     CheckBox,
 } from 'react-native';
-import { AxiosError } from 'axios'; // Import de AxiosError
-
-import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-import { RootStackParamList } from '../../types/navigation';
-import API from '../../services/api';
-import { loginStyle } from '../../styles/LoginScreen.styles';
+// API
+import { AxiosError } from 'axios'; // Import de AxiosError
+import API from '../services/api';
+
+// Navigation
+import { RootStackParamList } from '../navigation/navigationType';
+
+// Style
+import { loginStyle } from '../styles/loginScreen.styles';
+
+// Contexte
+import { useUser } from '../context/userContext';
 
 const LoginScreen = () => {
-    const route = useRoute<RouteProp<RootStackParamList, 'Login'>>();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+    const { dataUser, setDataUser } = useUser();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+    const [shouldRedirect, setShouldRedirect] = useState(false);
 
-    const { updateAccessToken } = route.params;
+    // Utilisation d'un useEffect car je mets a jour dataUser via un useState (asynchrone)
+    useEffect(() => {
+        if (dataUser?.id && dataUser?.email) navigation.navigate('Home');
+    }, [shouldRedirect]);
+
     const handleLogin = async () => {
         try {
             const response = await API.post('/auth/login', {
@@ -33,17 +46,11 @@ const LoginScreen = () => {
                 password,
             });
             const accessToken = response.data.access_token;
-            if (rememberMe) {
-                updateAccessToken(() => {
-                    localStorage.setItem('accessToken', accessToken);
-                    return accessToken;
-                });
-            }
 
-            navigation.navigate('Accueil', {
-                dataUser: response.data,
-                updateAccessToken: updateAccessToken,
-            });
+            if (rememberMe) localStorage.setItem('accessToken', accessToken);
+
+            setDataUser({ id: response.data.id, email: response.data.email });
+            setShouldRedirect(true);
         } catch (error) {
             if (error instanceof AxiosError) {
                 // Ici, on sait que c'est une erreur Axios et qu'elle a une réponse
@@ -86,9 +93,7 @@ const LoginScreen = () => {
             <View style={loginStyle.button}>
                 <Button
                     title="Créer un compte"
-                    onPress={() =>
-                        navigation.navigate('Register', { updateAccessToken })
-                    }
+                    onPress={() => navigation.navigate('Register')}
                     color="#00a35c"
                 />
             </View>

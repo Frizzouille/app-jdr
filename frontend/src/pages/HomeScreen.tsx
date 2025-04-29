@@ -1,32 +1,46 @@
 // src/pages/HomeScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../../types/navigation';
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Accueil'>;
+// Navigation
+import { RootStackParamList } from '../navigation/navigationType';
 
-const HomeScreen = ({ route }: { route: HomeScreenRouteProp }) => {
+// Style
+import { loginStyle } from '../styles/loginScreen.styles';
+
+// Contexte
+import { useUser } from '../context/userContext';
+
+const HomeScreen = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-    const { dataUser, updateAccessToken } = route.params;
-
-    const handleLogout = () => {
-        // Ici tu pourras ajouter la logique de déconnexion
-        updateAccessToken(() => {
-            localStorage.removeItem('accessToken');
-            return undefined;
-        });
-        navigation.navigate('Login', { updateAccessToken });
-    };
+    const { dataUser, logoutUser } = useUser();
+    if (!dataUser) {
+        logoutUser();
+        return;
+    }
 
     return (
-        <View style={styles.container}>
+        <View style={loginStyle.container}>
             <View style={styles.card}>
                 <Text style={styles.text}>Tu es connecté {dataUser.email}</Text>
-                <Button title="Se déconnecter" onPress={handleLogout} />
+                <View style={loginStyle.button}>
+                    <Button
+                        title="Maître du jeu"
+                        onPress={() => {
+                            navigation.navigate('MasterHome');
+                        }}
+                    />
+                </View>
+                <View style={loginStyle.button}>
+                    <Button
+                        title="Se déconnecter"
+                        onPress={logoutUser}
+                        color="red"
+                    />
+                </View>
             </View>
         </View>
     );
@@ -35,17 +49,10 @@ const HomeScreen = ({ route }: { route: HomeScreenRouteProp }) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-    },
     card: {
-        width: 500,
         alignItems: 'center',
         padding: 10,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#fff',
         borderRadius: 10,
     },
     text: {
