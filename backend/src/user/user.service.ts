@@ -21,7 +21,10 @@ export class UserService {
         const existingUser = await this.getUserByEmail(createDto.email);
         if (existingUser) {
             throw new HttpException(
-                "L'email existe déjà dans la base",
+                {
+                    message: ['Cette adresse mail est déjà liée à un compte.'],
+                    statusCode: HttpStatus.CONFLICT,
+                },
                 HttpStatus.CONFLICT,
             );
         }
@@ -35,9 +38,14 @@ export class UserService {
             return await createdUser.save();
         } catch (e) {
             throw new HttpException(
-                e.message ||
-                    "Une erreur est survenue lors de la création de l'utilisateur",
-                HttpStatus.INTERNAL_SERVER_ERROR, // Code HTTP 500 pour erreur interne
+                {
+                    message: [
+                        e.message ||
+                            "Une erreur est survenue lors de la création de l'utilisateur",
+                    ],
+                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                },
+                HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     }

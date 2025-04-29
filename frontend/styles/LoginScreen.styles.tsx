@@ -11,6 +11,7 @@ export const loginStyle = StyleSheet.create({
     },
     title: {
         fontSize: 28,
+        marginBottom: 16,
         fontWeight: 'bold',
         textAlign: 'center',
     },
@@ -32,5 +33,9 @@ export const loginStyle = StyleSheet.create({
     },
     button: {
         marginTop: 20,
+    },
+    error: {
+        color: 'red',
+        fontWeight: 'bold',
     },
 });
