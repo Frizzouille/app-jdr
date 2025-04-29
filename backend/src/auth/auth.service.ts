@@ -30,7 +30,7 @@ export class AuthService {
         }
 
         const { access_token } = this.authenticateUser({ userId: user.id }); // Le token est retourné au frontend
-        return { access_token, email };
+        return { access_token, id: user.id, email };
     }
 
     // Compare un mot (password) avec sa version hash (hashedPassword)
