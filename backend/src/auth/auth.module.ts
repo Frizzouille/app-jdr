@@ -13,7 +13,7 @@ import { User, UserSchema } from '../user/schemas/user.schema';
         JwtModule.register({
             global: true,
             secret: process.env.JWT_SECRET,
-            signOptions: { expiresIn: '1h' },
+            signOptions: { expiresIn: '30d' },
         }),
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]), // <-- Ajout du schéma
     ],

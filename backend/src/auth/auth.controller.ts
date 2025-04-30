@@ -39,7 +39,7 @@ export class AuthController {
             throw new NotFoundException('Utilisateur non trouvé');
         }
 
-        const { id, email } = res;
-        return { id, email };
+        const { _id, email } = res;
+        return { id: _id, email };
     }
 }

@@ -6,6 +6,7 @@ import { hash } from 'bcrypt';
 
 import { User, UserDocument } from './schemas/user.schema';
 import { CreateDto } from './dto/create.dto';
+
 @Injectable()
 export class UserService {
     constructor(
@@ -55,9 +56,9 @@ export class UserService {
         return await this.userModel.findOne({ email }).exec();
     }
 
-    // Trouver un utilisateur par email
+    // Trouver un utilisateur par id
     async getUserById(id: string): Promise<User | null> {
-        return await this.userModel.findOne({ id }).exec();
+        return await this.userModel.findById(id).exec();
     }
 
     // Hash un mdp // Utilisation pour création ou modification du mdp d'un user

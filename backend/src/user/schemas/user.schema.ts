@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import * as cuid from 'cuid'; // Import de la bibliothèque cuid
+import { Document, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
@@ -9,8 +8,7 @@ export type UserDocument = User & Document;
     timestamps: true,
 })
 export class User {
-    @Prop({ default: () => cuid() }) // Utilisation de cuid pour générer un id unique par défaut
-    id: string;
+    _id: Types.ObjectId;
 
     @Prop({ unique: true, required: true })
     email: string;
