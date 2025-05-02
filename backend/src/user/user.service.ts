@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { hash } from 'bcrypt';
 
 import { User, UserDocument } from './schemas/user.schema';
-import { CreateDto } from './dto/create.dto';
+import { CreateUserDto } from './dto/create.dto';
 
 @Injectable()
 export class UserService {
@@ -17,8 +17,18 @@ export class UserService {
         return this.userModel.find().exec();
     }
 
+    // Trouver un utilisateur par email
+    async getUserByEmail(email: string): Promise<User | null> {
+        return await this.userModel.findOne({ email }).exec();
+    }
+
+    // Trouver un utilisateur par id
+    async getUserById(id: string): Promise<User | null> {
+        return await this.userModel.findById(id).exec();
+    }
+
     // Créer un nouvel utilisateur
-    async createUser(createDto: CreateDto): Promise<User> {
+    async createUser(createDto: CreateUserDto): Promise<User | undefined> {
         const existingUser = await this.getUserByEmail(createDto.email);
         if (existingUser) {
             throw new HttpException(
@@ -49,16 +59,6 @@ export class UserService {
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
-    }
-
-    // Trouver un utilisateur par email
-    async getUserByEmail(email: string): Promise<User | null> {
-        return await this.userModel.findOne({ email }).exec();
-    }
-
-    // Trouver un utilisateur par id
-    async getUserById(id: string): Promise<User | null> {
-        return await this.userModel.findById(id).exec();
     }
 
     // Hash un mdp // Utilisation pour création ou modification du mdp d'un user

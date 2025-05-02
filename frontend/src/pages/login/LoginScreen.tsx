@@ -13,16 +13,17 @@ import { useNavigation } from '@react-navigation/native';
 
 // API
 import { AxiosError } from 'axios'; // Import de AxiosError
-import API from '../services/api';
+import API from '../../services/api';
 
 // Navigation
-import { RootStackParamList } from '../navigation/navigationType';
+import { RootStackParamList } from '../../navigation/navigationType';
 
 // Style
-import { loginStyle } from '../styles/loginScreen.styles';
+import { loginStyle } from '../../styles/loginScreen.styles';
+import { cardStyle } from '../../styles/card.styles';
 
 // Contexte
-import { useUser } from '../context/userContext';
+import { useUser } from '../../context/userContext';
 
 const LoginScreen = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -66,36 +67,43 @@ const LoginScreen = () => {
     };
 
     return (
-        <View style={loginStyle.container}>
-            <Text style={loginStyle.title}>Connexion</Text>
+        <View style={cardStyle.container}>
+            <View style={cardStyle.card}>
+                <Text style={loginStyle.title}>Connexion</Text>
 
-            <TextInput
-                style={loginStyle.input}
-                placeholder="Email"
-                onChangeText={setEmail}
-                value={email}
-            />
-
-            <TextInput
-                style={loginStyle.input}
-                placeholder="Mot de passe"
-                secureTextEntry
-                onChangeText={setPassword}
-                value={password}
-            />
-            <View style={loginStyle.checkboxContainer}>
-                <CheckBox value={rememberMe} onValueChange={setRememberMe} />
-                <Text style={loginStyle.checkboxLabel}>Se souvenir de moi</Text>
-            </View>
-            <View style={loginStyle.button}>
-                <Button title="Se connecter" onPress={handleLogin} />
-            </View>
-            <View style={loginStyle.button}>
-                <Button
-                    title="Créer un compte"
-                    onPress={() => navigation.navigate('Register')}
-                    color="#00a35c"
+                <TextInput
+                    style={loginStyle.input}
+                    placeholder="Email"
+                    onChangeText={setEmail}
+                    value={email}
                 />
+
+                <TextInput
+                    style={loginStyle.input}
+                    placeholder="Mot de passe"
+                    secureTextEntry
+                    onChangeText={setPassword}
+                    value={password}
+                />
+                <View style={loginStyle.checkboxContainer}>
+                    <CheckBox
+                        value={rememberMe}
+                        onValueChange={setRememberMe}
+                    />
+                    <Text style={loginStyle.checkboxLabel}>
+                        Se souvenir de moi
+                    </Text>
+                </View>
+                <View style={loginStyle.button}>
+                    <Button title="Se connecter" onPress={handleLogin} />
+                </View>
+                <View style={loginStyle.button}>
+                    <Button
+                        title="Créer un compte"
+                        onPress={() => navigation.navigate('Register')}
+                        color="#00a35c"
+                    />
+                </View>
             </View>
         </View>
     );

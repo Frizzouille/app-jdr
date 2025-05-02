@@ -7,13 +7,15 @@ import { navigate } from '../navigation/navigationRef'; // adapte selon ton arbo
 type User = {
     id?: string;
     email?: string | undefined;
+    firstname?: string | undefined;
+    surname?: string | undefined;
 };
 
 type UserContextType = {
     dataUser: User | null;
-    setDataUser: (user: User | null) => void;
     accessToken: string | undefined;
     isLoading: boolean;
+    setDataUser: (user: User | null) => void;
     logoutUser: () => void;
 };
 

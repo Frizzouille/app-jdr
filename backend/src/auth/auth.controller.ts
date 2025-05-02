@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
-import { LoginDto } from '../user/dto/login.dto';
+import { LoginUserDto } from '../user/dto/login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { UserService } from 'src/user/user.service';
 import { UserPayload } from './jwt.strategy';
@@ -25,7 +25,7 @@ export class AuthController {
 
     @Post('login') // localhost:3000/auth/login
     @HttpCode(HttpStatus.OK)
-    async login(@Body() loginDto: LoginDto) {
+    async login(@Body() loginDto: LoginUserDto) {
         return this.authService.login(loginDto);
     }
 
@@ -39,7 +39,7 @@ export class AuthController {
             throw new NotFoundException('Utilisateur non trouvé');
         }
 
-        const { _id, email } = res;
-        return { id: _id, email };
+        const { _id, email, firstname, surname } = res;
+        return { id: _id, email, firstname, surname };
     }
 }

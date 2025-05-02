@@ -6,16 +6,17 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 // API
 import axios from 'axios';
-import API from '../services/api'; // ajuste le chemin selon ta structure
+import API from '../../services/api'; // ajuste le chemin selon ta structure
 
 // Navigation
-import { RootStackParamList } from '../navigation/navigationType';
+import { RootStackParamList } from '../../navigation/navigationType';
 
 // Style
-import { loginStyle } from '../styles/loginScreen.styles';
+import { loginStyle } from '../../styles/loginScreen.styles';
+import { cardStyle } from '../../styles/card.styles';
 
 // Context
-import { useUser } from '../context/userContext';
+import { useUser } from '../../context/userContext';
 
 export default function RegisterScreen() {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -76,39 +77,41 @@ export default function RegisterScreen() {
     };
 
     return (
-        <View style={loginStyle.container}>
-            <Text style={loginStyle.title}>Créer un compte</Text>
+        <View style={cardStyle.container}>
+            <View style={cardStyle.card}>
+                <Text style={loginStyle.title}>Créer un compte</Text>
 
-            <TextInput
-                style={loginStyle.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-            />
-            <TextInput
-                style={loginStyle.input}
-                placeholder="Mot de passe"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-            />
-            <TextInput
-                style={loginStyle.input}
-                placeholder="Confirmer le mot de passe"
-                value={confirmedPassword}
-                onChangeText={setConfirmedPassword}
-                secureTextEntry
-            />
-            {Array.isArray(errorMessage) && errorMessage.length > 0 && (
-                <>
-                    {errorMessage.map((element, index) => (
-                        <Text key={index} style={loginStyle.error}>
-                            {element}
-                        </Text>
-                    ))}
-                </>
-            )}
-            <Button title="Créer le compte" onPress={handleRegister} />
+                <TextInput
+                    style={loginStyle.input}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                />
+                <TextInput
+                    style={loginStyle.input}
+                    placeholder="Mot de passe"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                />
+                <TextInput
+                    style={loginStyle.input}
+                    placeholder="Confirmer le mot de passe"
+                    value={confirmedPassword}
+                    onChangeText={setConfirmedPassword}
+                    secureTextEntry
+                />
+                {Array.isArray(errorMessage) && errorMessage.length > 0 && (
+                    <>
+                        {errorMessage.map((element, index) => (
+                            <Text key={index} style={loginStyle.error}>
+                                {element}
+                            </Text>
+                        ))}
+                    </>
+                )}
+                <Button title="Créer le compte" onPress={handleRegister} />
+            </View>
         </View>
     );
 }

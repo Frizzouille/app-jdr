@@ -1,10 +1,5 @@
-// src/auth/dto/login.dto.ts
-import { IsEmail, IsString } from 'class-validator';
+import { UserDto } from './user.dto';
 
-export class LoginDto {
-    @IsEmail({}, { message: 'Vous devez fournir une adresse mail valide.' }) // Validation de l'email
-    email: string;
-
-    @IsString() // Validation du mot de passe
-    password: string;
+export class LoginUserDto extends UserDto {
+    // Pas de modifications nécessaires, tu peux directement hériter d'UserdDto.
 }

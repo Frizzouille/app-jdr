@@ -1,13 +1,12 @@
-// src/auth/dto/create.dto.ts
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
+import { UserDto } from './user.dto';
 
-export class CreateDto {
-    @IsEmail({}, { message: 'Vous devez fournir une adresse mail valide.' }) // Validation de l'email
-    email: string;
+export class CreateUserDto extends UserDto {
+    @IsOptional()
+    @IsString()
+    firstname?: string; // Prénom de l'utilisateur
 
-    @IsString() // Validation du mot de passe
-    @MinLength(6, {
-        message: 'Votre mot de passe doit faire au minimum 8 caractères',
-    })
-    password: string;
+    @IsOptional()
+    @IsString()
+    surname?: string; // Nom de l'utilisateur
 }

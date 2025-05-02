@@ -1,48 +1,37 @@
-// src/pages/HomeScreen.tsx
+// src/pages/MasterHomeScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-// Navigation
-import { RootStackParamList } from '../navigation/navigationType';
-
 // Style
-import { loginStyle } from '../styles/loginScreen.styles';
-import { cardStyle } from '../styles/card.styles';
+import { loginStyle } from '../../styles/loginScreen.styles';
+import { cardStyle } from '../../styles/card.styles';
 
-// Contexte
-import { useUser } from '../context/userContext';
+// Navigation
+import { RootStackParamList } from '../../navigation/navigationType';
 
-const HomeScreen = () => {
+const MasterHomeScreen = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-    const { dataUser, logoutUser } = useUser();
-    if (!dataUser) {
-        logoutUser();
-        return;
-    }
 
     return (
         <View style={cardStyle.container}>
             <View style={cardStyle.card}>
-                <Text style={styles.text}>
-                    Tu es connecté{' '}
-                    {dataUser.firstname ? dataUser.firstname : dataUser.email}
-                </Text>
+                <Text style={styles.text}>Tu es sur la page MJ</Text>
                 <View style={loginStyle.button}>
                     <Button
-                        title="Maître du jeu"
+                        title="Aventure en cours"
                         onPress={() => {
-                            navigation.navigate('MasterHome');
+                            navigation.navigate('ActualMasterGame');
                         }}
                     />
                 </View>
                 <View style={loginStyle.button}>
                     <Button
-                        title="Se déconnecter"
-                        onPress={logoutUser}
-                        color="red"
+                        title="Nouvelle aventure"
+                        onPress={() => {
+                            navigation.navigate('NewMasterGame');
+                        }}
                     />
                 </View>
             </View>
@@ -50,7 +39,7 @@ const HomeScreen = () => {
     );
 };
 
-export default HomeScreen;
+export default MasterHomeScreen;
 
 const styles = StyleSheet.create({
     text: {

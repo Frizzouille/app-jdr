@@ -3,4 +3,7 @@ export type RootStackParamList = {
     Register: undefined;
     Home: undefined;
     MasterHome: undefined;
+    ActualMasterGame: undefined;
+    NewMasterGame: undefined;
+    Adventure: { idAdventure: string };
 };

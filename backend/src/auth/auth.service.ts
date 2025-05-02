@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt'; // Pour créer des tokens JWT
 import { compare } from 'bcrypt';
-import { LoginDto } from '../user/dto/login.dto';
+import { LoginUserDto } from '../user/dto/login.dto';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class AuthService {
     ) {}
 
     // Connexion avec couple {email, password}
-    async login(loginDto: LoginDto) {
+    async login(loginDto: LoginUserDto) {
         const { email, password } = loginDto;
 
         // Recherche dans la base un utilisateur avec cette adresse mail
@@ -32,7 +32,13 @@ export class AuthService {
         const { access_token } = this.authenticateUser({
             userId: user._id.toString(),
         });
-        return { access_token, id: user._id.toString(), email };
+        return {
+            access_token,
+            id: user._id.toString(),
+            email,
+            firstname: user.firstname,
+            surname: user.surname,
+        };
     }
 
     // Compare un mot (password) avec sa version hash (hashedPassword)

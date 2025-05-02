@@ -7,10 +7,13 @@ import { RootStackParamList } from './src/navigation/navigationType';
 import { navigationRef } from './src/navigation/navigationRef'; // adapte le chemin
 
 // Page
-import LoginScreen from './src/pages/LoginScreen';
-import RegisterScreen from './src/pages/RegisterScreen';
-import HomeScreen from './src/pages/HomeScreen';
-import MasterHome from './src/pages/MasterHomeScreen';
+import LoginS from './src/pages/login/LoginScreen';
+import RegisterS from './src/pages/login/RegisterScreen';
+import HomeS from './src/pages/HomeScreen';
+import MasterHomeS from './src/pages/master/MasterHomeScreen';
+import AMGS from './src/pages/master/ActualMasterGameScreen';
+import NMGS from './src/pages/master/NewMasterGameScreen';
+import AdventureS from './src/pages/adventures/AdventureScreen';
 
 // Contexte
 import { UserProvider, useUser } from './src/context/userContext';
@@ -36,10 +39,13 @@ function AppNavigation() {
     return (
         <NavigationContainer ref={navigationRef}>
             <Stack.Navigator initialRouteName={dataUser ? 'Home' : 'Login'}>
-                <Stack.Screen name="Home" component={HomeScreen} />
-                <Stack.Screen name="MasterHome" component={MasterHome} />
-                <Stack.Screen name="Login" component={LoginScreen} />
-                <Stack.Screen name="Register" component={RegisterScreen} />
+                <Stack.Screen name="Home" component={HomeS} />
+                <Stack.Screen name="MasterHome" component={MasterHomeS} />
+                <Stack.Screen name="ActualMasterGame" component={AMGS} />
+                <Stack.Screen name="NewMasterGame" component={NMGS} />
+                <Stack.Screen name="Login" component={LoginS} />
+                <Stack.Screen name="Register" component={RegisterS} />
+                <Stack.Screen name="Adventure" component={AdventureS} />
             </Stack.Navigator>
         </NavigationContainer>
     );
