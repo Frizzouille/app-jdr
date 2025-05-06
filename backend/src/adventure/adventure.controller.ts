@@ -17,7 +17,7 @@ import { UserPayload } from 'src/auth/jwt.strategy';
 @Controller('adventures')
 export class AdventureController {
     constructor(private readonly adventureService: AdventureService) {}
-    // localhost:3000/adventure
+    // localhost:3000/adventures
 
     @UseGuards(JwtAuthGuard)
     @Get()

@@ -11,7 +11,6 @@ import LoginS from './src/pages/login/LoginScreen';
 import RegisterS from './src/pages/login/RegisterScreen';
 import HomeS from './src/pages/HomeScreen';
 import MasterHomeS from './src/pages/master/MasterHomeScreen';
-import AMGS from './src/pages/master/ActualMasterGameScreen';
 import NMGS from './src/pages/master/NewMasterGameScreen';
 import AdventureS from './src/pages/adventures/AdventureScreen';
 
@@ -41,7 +40,6 @@ function AppNavigation() {
             <Stack.Navigator initialRouteName={dataUser ? 'Home' : 'Login'}>
                 <Stack.Screen name="Home" component={HomeS} />
                 <Stack.Screen name="MasterHome" component={MasterHomeS} />
-                <Stack.Screen name="ActualMasterGame" component={AMGS} />
                 <Stack.Screen name="NewMasterGame" component={NMGS} />
                 <Stack.Screen name="Login" component={LoginS} />
                 <Stack.Screen name="Register" component={RegisterS} />

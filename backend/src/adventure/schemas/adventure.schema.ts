@@ -18,6 +18,9 @@ export class Adventure {
 
     @Prop()
     description: string;
+
+    @Prop()
+    image: string;
 }
 
 export const AdventureSchema = SchemaFactory.createForClass(Adventure);

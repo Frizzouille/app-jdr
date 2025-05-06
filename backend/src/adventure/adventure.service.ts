@@ -4,7 +4,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Adventure, AdventureDocument } from './schemas/adventure.schema';
 import { CreateAdventureDto } from './dto/create.dto';
 import { Model } from 'mongoose';
-import { create } from 'domain';
 
 @Injectable()
 export class AdventureService {

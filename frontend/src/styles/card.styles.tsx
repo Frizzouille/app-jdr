@@ -4,8 +4,6 @@ export const cardStyle = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        padding: 24,
-        width: 600,
         alignSelf: 'center',
         backgroundColor: '#f0f0f0',
     },

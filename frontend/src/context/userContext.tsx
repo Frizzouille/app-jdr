@@ -9,6 +9,7 @@ type User = {
     email?: string | undefined;
     firstname?: string | undefined;
     surname?: string | undefined;
+    avatarUrl?: string | undefined;
 };
 
 type UserContextType = {
