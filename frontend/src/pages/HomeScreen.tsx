@@ -9,7 +9,8 @@ import {
     Image,
     ScrollView,
     FlatList, // Added FlatList for carousel
-    Dimensions, // Added Dimensions for responsive item width
+    Dimensions,
+    SafeAreaView, // Added Dimensions for responsive item width
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -24,6 +25,10 @@ import { useUser } from '../context/userContext';
 // API Service (Assuming path)
 import API from '../services/api';
 
+// Composant
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+
 // Types (Define or import your Adventure type)
 interface Adventure {
     _id: string;
@@ -31,86 +36,32 @@ interface Adventure {
     image: string;
 }
 
-// --- Carousel Component ---
-const screenWidth = Dimensions.get('window').width;
-const adventureItemWidth = screenWidth * 0.4; // Width for ~2.5 items
-
-const AdventureCarousel = ({
-    title,
-    adventures,
-}: {
-    title: string;
-    adventures?: Adventure[];
-}) => {
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const renderAdventureItem = ({ item }: { item: Adventure }) => (
-        <TouchableOpacity
-            onPress={() =>
-                navigation.navigate('Adventure', { idAdventure: item._id })
-            }
-        >
-            <View style={styles.adventureItem}>
-                <Text style={styles.adventureTitle}>{item.title}</Text>
-                {item.image && (
-                    <Image
-                        source={require('../img/image.jpg')}
-                        style={styles.adventureImage}
-                    />
-                )}
-            </View>
-        </TouchableOpacity>
-    );
-
-    return (
-        <View style={styles.carouselContainer}>
-            <Text style={styles.carouselTitle}>{title}</Text>
-            {adventures && adventures.length > 0 ? (
-                <FlatList
-                    data={adventures}
-                    renderItem={renderAdventureItem}
-                    keyExtractor={(item) => item._id.toString()}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.carouselListContainer}
-                />
-            ) : (
-                <View style={styles.carouselPlaceholder}>
-                    <Text>
-                        {adventures && adventures.length > 0
-                            ? 'Loading adventures...'
-                            : 'No adventures to display'}
-                    </Text>
-                </View>
-            )}
-        </View>
-    );
-};
-
 // --- Home Screen Component ---
 const HomeScreen = () => {
     // Assuming accessToken is provided by useUser context
     const { dataUser, accessToken, logoutUser } = useUser();
-    const [latestAdventures, setLatestAdventures] = useState<Adventure[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [adventures, setAdventures] = useState<Adventure[]>([]);
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     useEffect(() => {
         const fetchAdventures = async () => {
             if (!accessToken) {
-                setIsLoading(false);
                 logoutUser();
                 return;
             }
 
+            const sort = 'lastOpened'; // Critère de tri (ex: dernière ouverture)
+            const order = 'desc'; // Ordre de tri (asc ou desc)
             try {
                 const response = await API.get<{ adventures: Adventure[] }>(
-                    '/adventures',
+                    `/adventures?sort=${sort}&order=${order}`,
                     {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
                         },
                     },
                 );
-                setLatestAdventures(response.data.adventures || []);
+                setAdventures(response.data.adventures || []);
             } catch (error) {
                 if (error instanceof AxiosError) {
                     console.error(
@@ -123,143 +74,116 @@ const HomeScreen = () => {
                         error,
                     );
                 }
-            } finally {
-                setIsLoading(false);
             }
         };
 
         fetchAdventures();
     }, [accessToken]); // Re-fetch if accessToken changes
 
-    const handleAvatarPress = () => {
-        console.log('Avatar pressed!');
-        // Navigate to profile or open menu
+    const handleNewAdventure = () => {
+        navigation.navigate('Adventure', { idAdventure: 'new' });
     };
 
+    const renderAdventureItem = ({ item }: { item: Adventure }) => (
+        <TouchableOpacity
+            style={styles.adventureItem}
+            onPress={() =>
+                navigation.navigate('Adventure', { idAdventure: item._id })
+            }
+        >
+            <Text style={styles.adventureTitle}>{item.title}</Text>
+        </TouchableOpacity>
+    );
+
     return (
-        <View style={styles.container}>
-            <View style={styles.topBar}>
-                <TextInput
-                    style={styles.searchBar}
-                    placeholder="Search adventures..."
-                />
+        <SafeAreaView style={styles.container}>
+            <Header />
+            <View style={styles.content}>
                 <TouchableOpacity
-                    onPress={handleAvatarPress}
-                    style={styles.avatarContainer}
+                    style={styles.newAdventureButton}
+                    onPress={handleNewAdventure}
                 >
-                    <Image
-                        source={{
-                            uri:
-                                dataUser?.avatarUrl ||
-                                'https://via.placeholder.com/40',
-                        }}
-                        style={styles.avatar}
-                    />
+                    <Text style={styles.buttonText}>Nouvelle aventure</Text>
                 </TouchableOpacity>
-            </View>
-            <ScrollView style={styles.contentContainer}>
-                <AdventureCarousel
-                    title="Latest Adventure"
-                    adventures={latestAdventures}
+
+                <FlatList
+                    data={adventures}
+                    renderItem={renderAdventureItem}
+                    keyExtractor={(item) => item._id}
+                    contentContainerStyle={styles.listContainer}
                 />
-                <AdventureCarousel title="Discover Adventures" />
-            </ScrollView>
-        </View>
+            </View>
+            <Footer
+                buttons={[
+                    {
+                        id: 'home',
+                        icon: 'home-outline',
+                        onPress: () => navigation.navigate('Home'),
+                    },
+                    {
+                        id: 'home2',
+                        icon: 'home-outline',
+                        onPress: () => navigation.navigate('Home'),
+                    },
+                    {
+                        id: 'home3',
+                        icon: 'home-outline',
+                        onPress: () => navigation.navigate('Home'),
+                    },
+                    {
+                        id: 'home4',
+                        icon: 'home-outline',
+                        onPress: () => navigation.navigate('Home'),
+                    },
+                    {
+                        id: 'home5',
+                        icon: 'home-outline',
+                        onPress: () => navigation.navigate('Home'),
+                    },
+                ]}
+            />
+        </SafeAreaView>
     );
 };
 
-export default HomeScreen;
-
-// --- Styles ---
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f5f5f5',
     },
-    topBar: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingHorizontal: 15,
-        paddingTop: 10, // Increased padding for status bar
-        paddingBottom: 10,
-        backgroundColor: '#ffffff',
-        borderBottomWidth: 1,
-        borderBottomColor: '#e0e0e0',
-    },
-    searchBar: {
+    content: {
         flex: 1,
-        height: 40,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 20,
-        paddingHorizontal: 15,
-        marginRight: 10,
-        fontSize: 16,
+        padding: 16,
     },
-    avatarContainer: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        overflow: 'hidden',
-        backgroundColor: '#cccccc',
-        justifyContent: 'center',
+    newAdventureButton: {
+        backgroundColor: '#591802',
+        padding: 12,
+        borderRadius: 8,
         alignItems: 'center',
+        marginBottom: 16,
     },
-    avatar: {
-        width: '100%',
-        height: '100%',
-    },
-    contentContainer: {
-        flex: 1,
-    },
-    carouselContainer: {
-        marginTop: 20,
-        marginBottom: 10, // Added margin bottom
-    },
-    carouselTitle: {
-        fontSize: 18,
+    buttonText: {
+        color: 'white',
         fontWeight: 'bold',
-        marginBottom: 10,
-        marginLeft: 15, // Added left margin for title
     },
-    carouselListContainer: {
-        paddingHorizontal: 15, // Add padding here for items
+    listContainer: {
+        paddingBottom: 16,
     },
-    carouselPlaceholder: {
-        height: 150,
-        backgroundColor: '#e0e0e0',
-        borderRadius: 8,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: 15, // Added margin to match list padding
-    },
-    // Styles for individual adventure items in the carousel
     adventureItem: {
-        width: adventureItemWidth,
-        height: 150, // Match placeholder height or adjust as needed
-        backgroundColor: '#ffffff',
+        backgroundColor: 'white',
+        padding: 16,
         borderRadius: 8,
-        marginRight: 10,
-        paddingVertical: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        // Add shadow or border if desired
+        marginBottom: 8,
         elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.2,
-        shadowRadius: 1.41,
-        position: 'relative',
     },
     adventureTitle: {
-        fontSize: 14,
+        fontSize: 18,
         fontWeight: 'bold',
-        textAlign: 'center',
+        marginBottom: 4,
     },
-    adventureImage: {
-        width: '100%',
-        height: '100%',
-        borderBottomStartRadius: 8,
-        borderBottomEndRadius: 8,
+    adventureDescription: {
+        color: '#666',
     },
 });
+
+export default HomeScreen;

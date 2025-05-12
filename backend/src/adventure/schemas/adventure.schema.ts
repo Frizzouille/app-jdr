@@ -21,6 +21,9 @@ export class Adventure {
 
     @Prop()
     image: string;
+
+    @Prop({ type: Date, default: null })
+    lastOpened: Date;
 }
 
 export const AdventureSchema = SchemaFactory.createForClass(Adventure);

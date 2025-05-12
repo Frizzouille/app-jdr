@@ -10,8 +10,6 @@ import { navigationRef } from './src/navigation/navigationRef'; // adapte le che
 import LoginS from './src/pages/login/LoginScreen';
 import RegisterS from './src/pages/login/RegisterScreen';
 import HomeS from './src/pages/HomeScreen';
-import MasterHomeS from './src/pages/master/MasterHomeScreen';
-import NMGS from './src/pages/master/NewMasterGameScreen';
 import AdventureS from './src/pages/adventures/AdventureScreen';
 
 // Contexte
@@ -37,14 +35,17 @@ function AppNavigation() {
     }
     return (
         <NavigationContainer ref={navigationRef}>
-            <Stack.Navigator initialRouteName={dataUser ? 'Home' : 'Login'}>
-                <Stack.Screen name="Home" component={HomeS} />
-                <Stack.Screen name="MasterHome" component={MasterHomeS} />
-                <Stack.Screen name="NewMasterGame" component={NMGS} />
-                <Stack.Screen name="Login" component={LoginS} />
-                <Stack.Screen name="Register" component={RegisterS} />
-                <Stack.Screen name="Adventure" component={AdventureS} />
-            </Stack.Navigator>
+            <View style={{ flex: 1, backgroundColor: '#000000' }}>
+                <Stack.Navigator
+                    screenOptions={{ headerShown: false }}
+                    initialRouteName={dataUser ? 'Home' : 'Login'}
+                >
+                    <Stack.Screen name="Home" component={HomeS} />
+                    <Stack.Screen name="Login" component={LoginS} />
+                    <Stack.Screen name="Register" component={RegisterS} />
+                    <Stack.Screen name="Adventure" component={AdventureS} />
+                </Stack.Navigator>
+            </View>
         </NavigationContainer>
     );
 }

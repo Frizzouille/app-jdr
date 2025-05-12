@@ -8,6 +8,7 @@ import {
     HttpStatus,
     HttpCode,
     UseGuards,
+    Query,
 } from '@nestjs/common';
 import { AdventureService } from './adventure.service';
 import { CreateAdventureDto } from './dto/create.dto';
@@ -22,10 +23,16 @@ export class AdventureController {
     @UseGuards(JwtAuthGuard)
     @Get()
     @HttpCode(HttpStatus.OK)
-    async getAdventures(@Request() req: { user: UserPayload }) {
+    async getAdventures(
+        @Request() req: Request & { user: UserPayload },
+        @Query('sort') sort: string,
+        @Query('order') order: string,
+    ) {
         const userId = req.user.userId;
         const adventures = await this.adventureService.getAdventuresByUserId(
             userId,
+            sort,
+            order,
         );
         return { adventures };
     }

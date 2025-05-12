@@ -18,12 +18,24 @@ export class AdventureService {
 
     // Trouve une aventure par son id
     async getAdventureById(id: string): Promise<Adventure | null> {
-        return await this.adventureModel.findById(id).exec();
+        return await this.adventureModel
+            .findByIdAndUpdate(id, { lastOpened: new Date() }, { new: true })
+            .exec();
     }
 
     // Trouve les aventures liées à un user
-    async getAdventuresByUserId(userId: string): Promise<Adventure[] | null> {
-        return await this.adventureModel.find({ userId }).exec();
+    async getAdventuresByUserId(
+        userId: string,
+        sort?: string,
+        order?: string,
+    ): Promise<Adventure[] | null> {
+        const sortField = sort || 'createdAt';
+        const sortOrder = order === 'desc' ? -1 : 1;
+
+        return await this.adventureModel
+            .find({ userId })
+            .sort({ [sortField]: sortOrder })
+            .exec();
     }
 
     // Créer un nouvel utilisateur
