@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/navigationType';
 
 type FooterButton = {
     id: string;
@@ -8,11 +11,43 @@ type FooterButton = {
     onPress?: () => void;
 };
 
-type FooterProps = {
-    buttons: FooterButton[];
+type args = {
+    context: string;
+    currentPage: string;
 };
 
-const Footer: React.FC<FooterProps> = ({ buttons }) => {
+const Footer = ({ context, currentPage }: args) => {
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const [buttons, setButtons] = useState<FooterButton[]>([]);
+
+    useEffect(() => {
+        let initialButtons: FooterButton[] = [];
+
+        if (context === 'Home') {
+            initialButtons = [
+                {
+                    id: 'home',
+                    icon: 'home-outline',
+                    onPress: () => navigation.navigate('Home'),
+                },
+                {
+                    id: 'profile',
+                    icon: 'person-outline',
+                    onPress: () => navigation.navigate('Login'),
+                },
+            ];
+        }
+
+        // Désactiver les onPress pour le bouton de la page actuelle
+        const updatedButtons = initialButtons.map((button) =>
+            button.id === currentPage
+                ? { ...button, onPress: undefined } // ou null si tu préfères
+                : button,
+        );
+
+        setButtons(updatedButtons);
+    }, [context, currentPage, navigation]);
+
     return (
         <View style={styles.footer}>
             {buttons.map((btn) => (

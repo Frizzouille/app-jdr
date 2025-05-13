@@ -1,10 +1,7 @@
 // src/pages/MasterHomeScreen.tsx
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
-
-// Style
-import { cardStyle } from '../../styles/card.styles';
 
 // Navigation
 import { RootStackParamList } from '../../navigation/navigationType';
@@ -12,6 +9,8 @@ import { RootStackParamList } from '../../navigation/navigationType';
 import { useUser } from '../../context/userContext';
 import { AxiosError } from 'axios';
 import API from '../../services/api';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 const AdventureScreen = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'Adventure'>>();
@@ -69,12 +68,25 @@ const AdventureScreen = () => {
     }
 
     return (
-        <View style={cardStyle.container}>
-            <View style={cardStyle.card}>
+        <SafeAreaView style={styles.container}>
+            <Header context="adventures" />
+            <View style={styles.content}>
                 <Text>Tu es sur la partie {dataAdventure.title}</Text>
             </View>
-        </View>
+            <Footer context="adventures" currentPage="characters" />
+        </SafeAreaView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#f5f5f5',
+    },
+    content: {
+        flex: 1,
+        padding: 16,
+    },
+});
 
 export default AdventureScreen;

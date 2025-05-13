@@ -1,16 +1,22 @@
-// src/pages/MasterHomeScreen.tsx
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, TextInput } from 'react-native';
-
-// API
-import API from '../../services/api';
-import { AxiosError } from 'axios';
-
-import { useUser } from '../../context/userContext';
+import {
+    View,
+    Text,
+    TextInput,
+    Button,
+    SafeAreaView,
+    StyleSheet,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigation/navigationType';
-const MasterHomeScreen = () => {
+import { RootStackParamList } from '../navigation/navigationType';
+import { useUser } from '../context/userContext';
+import API from '../services/api';
+import { AxiosError } from 'axios';
+import Header from './Header';
+import Footer from './Footer';
+
+const CreateAdventureForm = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const [title, setTitle] = useState('');
@@ -54,16 +60,14 @@ const MasterHomeScreen = () => {
             });
     }, [shouldRedirect]);
     return (
-        <View style={styles.container}>
-            <View style={styles.card}>
-                <Text style={styles.title}>
-                    Création d'une nouvelle aventure
-                </Text>
+        <SafeAreaView style={styles.container}>
+            <Header context="return" />
+            <View style={styles.content}>
+                <Text>Création d'une nouvelle aventure</Text>
                 <TextInput
                     placeholder="Titre"
                     value={title}
                     onChangeText={setTitle}
-                    style={styles.input}
                 />
                 <TextInput
                     multiline
@@ -71,67 +75,25 @@ const MasterHomeScreen = () => {
                     onChangeText={setDescription}
                     value={description}
                     placeholder="Description de cette aventure"
-                    style={styles.textArea}
                 />
-                <View style={styles.button}>
+                <View>
                     <Button title="Créer l'aventure" onPress={handleCreate} />
                 </View>
             </View>
-        </View>
+            <Footer context="home" currentPage="home" />
+        </SafeAreaView>
     );
 };
-
-export default MasterHomeScreen;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f2f2f2', // fond global léger
+        backgroundColor: '#f5f5f5',
+    },
+    content: {
+        flex: 1,
         padding: 16,
     },
-    card: {
-        width: '100%',
-        maxWidth: 600,
-        backgroundColor: '#ffffff',
-        borderRadius: 16,
-        padding: 24,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 4 },
-        shadowRadius: 8,
-        elevation: 4,
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 16,
-        textAlign: 'center',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 16,
-        fontSize: 16,
-        backgroundColor: '#fafafa',
-    },
-    textArea: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 8,
-        padding: 12,
-        height: 120,
-        fontSize: 16,
-        backgroundColor: '#fafafa',
-        textAlignVertical: 'top',
-        marginBottom: 16,
-    },
-    button: {
-        marginTop: 8,
-        borderRadius: 8,
-        overflow: 'hidden',
-    },
 });
+
+export default CreateAdventureForm;

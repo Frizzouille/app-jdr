@@ -1,7 +1,40 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Header = () => {
+const Header = ({ context }: { context: string }) => {
+    const navigation = useNavigation();
+
+    if (context === 'adventures') {
+        return (
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Ionicons name="arrow-back" size={24} color="black" />
+                </TouchableOpacity>
+
+                <Text style={styles.title}>Mon Application</Text>
+
+                <TouchableOpacity onPress={() => console.log('Help pressed')}>
+                    <Ionicons
+                        name="help-circle-outline"
+                        size={24}
+                        color="black"
+                    />
+                </TouchableOpacity>
+            </View>
+        );
+    } else if (context === 'return') {
+        return (
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Ionicons name="arrow-back" size={24} color="black" />
+                </TouchableOpacity>
+
+                <Text style={styles.title}>Mon Application</Text>
+            </View>
+        );
+    }
     return (
         <View style={styles.header}>
             <Text style={styles.title}>Mon Application</Text>

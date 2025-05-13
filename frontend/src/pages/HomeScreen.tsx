@@ -81,7 +81,7 @@ const HomeScreen = () => {
     }, [accessToken]); // Re-fetch if accessToken changes
 
     const handleNewAdventure = () => {
-        navigation.navigate('Adventure', { idAdventure: 'new' });
+        navigation.navigate('CreateAdventure');
     };
 
     const renderAdventureItem = ({ item }: { item: Adventure }) => (
@@ -97,7 +97,7 @@ const HomeScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header />
+            <Header context="home" />
             <View style={styles.content}>
                 <TouchableOpacity
                     style={styles.newAdventureButton}
@@ -113,35 +113,7 @@ const HomeScreen = () => {
                     contentContainerStyle={styles.listContainer}
                 />
             </View>
-            <Footer
-                buttons={[
-                    {
-                        id: 'home',
-                        icon: 'home-outline',
-                        onPress: () => navigation.navigate('Home'),
-                    },
-                    {
-                        id: 'home2',
-                        icon: 'home-outline',
-                        onPress: () => navigation.navigate('Home'),
-                    },
-                    {
-                        id: 'home3',
-                        icon: 'home-outline',
-                        onPress: () => navigation.navigate('Home'),
-                    },
-                    {
-                        id: 'home4',
-                        icon: 'home-outline',
-                        onPress: () => navigation.navigate('Home'),
-                    },
-                    {
-                        id: 'home5',
-                        icon: 'home-outline',
-                        onPress: () => navigation.navigate('Home'),
-                    },
-                ]}
-            />
+            <Footer context="Home" currentPage="Home" />
         </SafeAreaView>
     );
 };
