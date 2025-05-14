@@ -12,7 +12,7 @@ import {
     Dimensions,
     SafeAreaView, // Added Dimensions for responsive item width
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AxiosError } from 'axios'; // Added for error handling
 
@@ -42,6 +42,8 @@ const HomeScreen = () => {
     const { dataUser, accessToken, logoutUser } = useUser();
     const [adventures, setAdventures] = useState<Adventure[]>([]);
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const fetchAdventures = async () => {
@@ -78,7 +80,7 @@ const HomeScreen = () => {
         };
 
         fetchAdventures();
-    }, [accessToken]); // Re-fetch if accessToken changes
+    }, [isFocused]);
 
     const handleNewAdventure = () => {
         navigation.navigate('CreateAdventure');

@@ -14,8 +14,10 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { AdventureService } from 'src/adventure/adventure.service';
+import { InvitationService } from 'src/invitation/invitation.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserPayload } from 'src/auth/jwt.strategy';
+import { Types } from 'mongoose';
 
 @Controller('users')
 export class UserController {
@@ -23,20 +25,23 @@ export class UserController {
         private readonly userService: UserService,
         private readonly authService: AuthService,
         private readonly adventureService: AdventureService,
+        private readonly InvitationService: InvitationService,
     ) {}
     // localhost:3000/users
 
     @Get()
     @HttpCode(HttpStatus.OK)
     async getUsers() {
-        return this.userService.getUsers();
+        return await this.userService.getUsers();
     }
 
     @UseGuards(JwtAuthGuard)
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     async getUserById(@Request() req: { user: UserPayload }) {
-        return this.userService.getUserById(req.user.userId);
+        return await this.userService.getUserById(
+            new Types.ObjectId(req.user.userId),
+        );
     }
 
     @Post('create')
@@ -53,6 +58,14 @@ export class UserController {
     @Get(':id/adventures')
     @HttpCode(HttpStatus.OK)
     async getAdventuresByUserId(@Param('id') id: string) {
-        return this.adventureService.getAdventuresByUserId(id);
+        return await this.adventureService.getAdventuresByUserId(
+            new Types.ObjectId(id),
+        );
+    }
+
+    @Get(':id/adventuresInvitations')
+    @HttpCode(HttpStatus.OK)
+    async getAdventuresInvitationByUserId(@Param('id') id: string) {
+        return await this.InvitationService.getAdventuresInvitationByUserId(id);
     }
 }

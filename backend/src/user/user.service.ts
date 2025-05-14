@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 import { hash } from 'bcrypt';
 
@@ -19,12 +19,17 @@ export class UserService {
 
     // Trouver un utilisateur par email
     async getUserByEmail(email: string): Promise<User | null> {
-        return await this.userModel.findOne({ email }).exec();
+        return this.userModel.findOne({ email }).exec();
+    }
+
+    // Trouver des utilisateur par une liste d'email
+    async getUsersByEmail(emails: string[]): Promise<User[] | null> {
+        return this.userModel.find({ email: { $in: emails } }).exec();
     }
 
     // Trouver un utilisateur par id
-    async getUserById(id: string): Promise<User | null> {
-        return await this.userModel.findById(id).exec();
+    async getUserById(id: Types.ObjectId): Promise<User | null> {
+        return this.userModel.findById(id).exec();
     }
 
     // Créer un nouvel utilisateur
@@ -63,6 +68,6 @@ export class UserService {
 
     // Hash un mdp // Utilisation pour création ou modification du mdp d'un user
     private async hashPassword(password: string) {
-        return await hash(password, 10);
+        return hash(password, 10);
     }
 }

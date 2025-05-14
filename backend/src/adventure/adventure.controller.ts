@@ -14,10 +14,17 @@ import { AdventureService } from './adventure.service';
 import { CreateAdventureDto } from './dto/create.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserPayload } from 'src/auth/jwt.strategy';
+import { InvitationService } from 'src/invitation/invitation.service';
+import { UserService } from 'src/user/user.service';
+import { ObjectId, Types } from 'mongoose';
 
 @Controller('adventures')
 export class AdventureController {
-    constructor(private readonly adventureService: AdventureService) {}
+    constructor(
+        private readonly adventureService: AdventureService,
+        private readonly InvitationService: InvitationService,
+        private readonly UserService: UserService,
+    ) {}
     // localhost:3000/adventures
 
     @UseGuards(JwtAuthGuard)
@@ -30,7 +37,7 @@ export class AdventureController {
     ) {
         const userId = req.user.userId;
         const adventures = await this.adventureService.getAdventuresByUserId(
-            userId,
+            new Types.ObjectId(userId),
             sort,
             order,
         );
@@ -40,7 +47,9 @@ export class AdventureController {
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     async getAdventureById(@Param('id') id: string) {
-        const adventure = await this.adventureService.getAdventureById(id);
+        const adventure = await this.adventureService.getAdventureById(
+            new Types.ObjectId(id),
+        );
         return { adventure };
     }
 
@@ -52,8 +61,26 @@ export class AdventureController {
     ) {
         const userId = req.user.userId;
         return await this.adventureService.createAdventure(
-            userId,
+            new Types.ObjectId(userId),
             createAdventureDto,
+        );
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post(':id/invite')
+    async inviteUsers(
+        @Request() req: { user: UserPayload },
+        @Param('id') aventureId: string,
+        @Body() post: { invitedUsers: string[] },
+    ) {
+        const userId = req.user.userId;
+        const invitedUsersId = await this.UserService.getUsersByEmail(
+            post.invitedUsers,
+        );
+        return await this.InvitationService.inviteUsers(
+            new Types.ObjectId(userId),
+            new Types.ObjectId(aventureId),
+            invitedUsersId,
         );
     }
 }

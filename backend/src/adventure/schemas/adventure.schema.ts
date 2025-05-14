@@ -10,8 +10,8 @@ export type AdventureDocument = Adventure & Document;
 export class Adventure {
     _id: Types.ObjectId;
 
-    @Prop({ required: true })
-    userId: string;
+    @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+    userId: Types.ObjectId;
 
     @Prop({ required: true })
     title: string;
@@ -24,6 +24,9 @@ export class Adventure {
 
     @Prop({ type: Date, default: null })
     lastOpened: Date;
+
+    @Prop({ type: [Types.ObjectId], ref: 'User' })
+    playersId: Types.ObjectId[];
 }
 
 export const AdventureSchema = SchemaFactory.createForClass(Adventure);

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { Adventure, AdventureDocument } from './schemas/adventure.schema';
 import { CreateAdventureDto } from './dto/create.dto';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class AdventureService {
@@ -13,26 +13,26 @@ export class AdventureService {
     ) {}
 
     async getAdventures(): Promise<Adventure[]> {
-        return await this.adventureModel.find().exec();
+        return this.adventureModel.find().exec();
     }
 
     // Trouve une aventure par son id
-    async getAdventureById(id: string): Promise<Adventure | null> {
-        return await this.adventureModel
+    async getAdventureById(id: Types.ObjectId): Promise<Adventure | null> {
+        return this.adventureModel
             .findByIdAndUpdate(id, { lastOpened: new Date() }, { new: true })
             .exec();
     }
 
     // Trouve les aventures liées à un user
     async getAdventuresByUserId(
-        userId: string,
+        userId: Types.ObjectId,
         sort?: string,
         order?: string,
     ): Promise<Adventure[] | null> {
         const sortField = sort || 'createdAt';
         const sortOrder = order === 'desc' ? -1 : 1;
 
-        return await this.adventureModel
+        return this.adventureModel
             .find({ userId })
             .sort({ [sortField]: sortOrder })
             .exec();
@@ -40,7 +40,7 @@ export class AdventureService {
 
     // Créer un nouvel utilisateur
     async createAdventure(
-        userId: string,
+        userId: Types.ObjectId,
         createDto: CreateAdventureDto,
     ): Promise<Adventure | undefined> {
         const createAdventure = new this.adventureModel({
@@ -48,7 +48,7 @@ export class AdventureService {
             ...createDto,
         });
         try {
-            return await createAdventure.save();
+            return createAdventure.save();
         } catch (e) {
             throw new HttpException(
                 {
