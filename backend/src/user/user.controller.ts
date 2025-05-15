@@ -62,10 +62,4 @@ export class UserController {
             new Types.ObjectId(id),
         );
     }
-
-    @Get(':id/adventuresInvitations')
-    @HttpCode(HttpStatus.OK)
-    async getAdventuresInvitationByUserId(@Param('id') id: string) {
-        return await this.InvitationService.getAdventuresInvitationByUserId(id);
-    }
 }

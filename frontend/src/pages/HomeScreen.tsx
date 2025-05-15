@@ -4,12 +4,8 @@ import {
     View,
     Text,
     StyleSheet,
-    TextInput,
     TouchableOpacity,
-    Image,
-    ScrollView,
     FlatList, // Added FlatList for carousel
-    Dimensions,
     SafeAreaView, // Added Dimensions for responsive item width
 } from 'react-native';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
@@ -39,7 +35,7 @@ interface Adventure {
 // --- Home Screen Component ---
 const HomeScreen = () => {
     // Assuming accessToken is provided by useUser context
-    const { dataUser, accessToken, logoutUser } = useUser();
+    const { accessToken, logoutUser } = useUser();
     const [adventures, setAdventures] = useState<Adventure[]>([]);
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -57,11 +53,7 @@ const HomeScreen = () => {
             try {
                 const response = await API.get<{ adventures: Adventure[] }>(
                     `/adventures?sort=${sort}&order=${order}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                    },
+                    {},
                 );
                 setAdventures(response.data.adventures || []);
             } catch (error) {
@@ -83,7 +75,7 @@ const HomeScreen = () => {
     }, [isFocused]);
 
     const handleNewAdventure = () => {
-        navigation.navigate('CreateAdventure');
+        navigation.navigate('NewAdventure');
     };
 
     const renderAdventureItem = ({ item }: { item: Adventure }) => (

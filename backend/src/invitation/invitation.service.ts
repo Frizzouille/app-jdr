@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+    Body,
+    HttpException,
+    HttpStatus,
+    Injectable,
+    Post,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Invitation, InvitationDocument } from './schemas/invitation.schema';
@@ -14,10 +20,14 @@ export class InvitationService {
     ) {}
 
     // Trouve les invitations aux aventures liées à un user
-    async getAdventuresInvitationByUserId(
-        userId: string,
+    async getInvitationsByUserId(
+        userId: Types.ObjectId,
     ): Promise<Invitation[] | null> {
         return this.InvitationModel.find({ userId, status: 'invited' })
+            .populate({
+                path: 'adventureId',
+                select: 'title',
+            })
             .sort({ createdAt: -1 })
             .exec();
     }
@@ -63,11 +73,26 @@ export class InvitationService {
         const invitations = validUserIds.map((tempUser) => ({
             adventureId,
             userId: tempUser._id,
-            status: 'invitation',
+            status: 'invited',
         }));
 
-        // console.log(invitations);
-        // return;
         return this.InvitationModel.insertMany(invitations);
+    }
+
+    async updateInvitationStatus(
+        userId: Types.ObjectId,
+        invitationId: Types.ObjectId,
+        status: string,
+    ): Promise<Invitation | null> {
+        const invitation = await this.InvitationModel.findOneAndUpdate(
+            { _id: invitationId, userId },
+            { status },
+            { new: true },
+        ).exec();
+
+        if (invitation && status === 'accepted') {
+            this.AdventureService.addUser(invitation.adventureId, userId);
+        }
+        return invitation;
     }
 }

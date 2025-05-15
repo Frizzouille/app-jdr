@@ -16,7 +16,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserPayload } from 'src/auth/jwt.strategy';
 import { InvitationService } from 'src/invitation/invitation.service';
 import { UserService } from 'src/user/user.service';
-import { ObjectId, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
 @Controller('adventures')
 export class AdventureController {
@@ -55,11 +55,13 @@ export class AdventureController {
 
     @UseGuards(JwtAuthGuard)
     @Post('create')
+    @HttpCode(HttpStatus.CREATED)
     async createAdventure(
         @Request() req: { user: UserPayload },
         @Body() createAdventureDto: CreateAdventureDto,
     ) {
         const userId = req.user.userId;
+
         return await this.adventureService.createAdventure(
             new Types.ObjectId(userId),
             createAdventureDto,
@@ -68,6 +70,7 @@ export class AdventureController {
 
     @UseGuards(JwtAuthGuard)
     @Post(':id/invite')
+    @HttpCode(HttpStatus.CREATED)
     async inviteUsers(
         @Request() req: { user: UserPayload },
         @Param('id') aventureId: string,

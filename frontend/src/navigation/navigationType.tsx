@@ -3,5 +3,5 @@ export type RootStackParamList = {
     Register: undefined;
     Home: undefined;
     Adventure: { idAdventure: string };
-    CreateAdventure: undefined;
+    NewAdventure: { mode: string } | undefined;
 };

@@ -9,18 +9,20 @@ import { Model, Types } from 'mongoose';
 export class AdventureService {
     constructor(
         @InjectModel(Adventure.name)
-        private adventureModel: Model<AdventureDocument>,
+        private AdventureModel: Model<AdventureDocument>,
     ) {}
 
     async getAdventures(): Promise<Adventure[]> {
-        return this.adventureModel.find().exec();
+        return this.AdventureModel.find().exec();
     }
 
     // Trouve une aventure par son id
     async getAdventureById(id: Types.ObjectId): Promise<Adventure | null> {
-        return this.adventureModel
-            .findByIdAndUpdate(id, { lastOpened: new Date() }, { new: true })
-            .exec();
+        return this.AdventureModel.findByIdAndUpdate(
+            id,
+            { lastOpened: new Date() },
+            { new: true },
+        ).exec();
     }
 
     // Trouve les aventures liées à un user
@@ -32,8 +34,9 @@ export class AdventureService {
         const sortField = sort || 'createdAt';
         const sortOrder = order === 'desc' ? -1 : 1;
 
-        return this.adventureModel
-            .find({ userId })
+        return this.AdventureModel.find({
+            $or: [{ userId }, { playersId: userId }],
+        })
             .sort({ [sortField]: sortOrder })
             .exec();
     }
@@ -43,7 +46,7 @@ export class AdventureService {
         userId: Types.ObjectId,
         createDto: CreateAdventureDto,
     ): Promise<Adventure | undefined> {
-        const createAdventure = new this.adventureModel({
+        const createAdventure = new this.AdventureModel({
             userId,
             ...createDto,
         });
@@ -61,5 +64,21 @@ export class AdventureService {
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
+    }
+
+    async addUser(adventureId: Types.ObjectId, userId: Types.ObjectId) {
+        return this.AdventureModel.findOneAndUpdate(
+            { _id: adventureId },
+            { $addToSet: { playersId: userId } },
+            { new: true },
+        ).exec();
+    }
+
+    async removeUser(adventureId: Types.ObjectId, userId: Types.ObjectId) {
+        return this.AdventureModel.findOneAndUpdate(
+            { _id: adventureId },
+            { $pull: { playersId: userId } },
+            { new: true },
+        ).exec();
     }
 }

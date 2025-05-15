@@ -26,11 +26,7 @@ const AdventureScreen = () => {
     useEffect(() => {
         async function getAdventures() {
             try {
-                const response = await API.get('/adventures/' + idAdventure, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                });
+                const response = await API.get('/adventures/' + idAdventure);
 
                 setDataAdventure(response.data.adventure);
                 setIsLoading(false);

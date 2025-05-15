@@ -11,7 +11,7 @@ import LoginS from './src/pages/login/LoginScreen';
 import RegisterS from './src/pages/login/RegisterScreen';
 import HomeS from './src/pages/HomeScreen';
 import AdventureS from './src/pages/adventures/AdventureScreen';
-import CreateAdventure from './src/components/CreateAdventureForm';
+import NewAdventure from './src/pages/NewAdventures';
 
 // Contexte
 import { UserProvider, useUser } from './src/context/userContext';
@@ -46,8 +46,8 @@ function AppNavigation() {
                     <Stack.Screen name="Register" component={RegisterS} />
                     <Stack.Screen name="Adventure" component={AdventureS} />
                     <Stack.Screen
-                        name="CreateAdventure"
-                        component={CreateAdventure}
+                        name="NewAdventure"
+                        component={NewAdventure}
                     />
                 </Stack.Navigator>
             </View>

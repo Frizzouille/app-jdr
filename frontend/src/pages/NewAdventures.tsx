@@ -1,32 +1,83 @@
 // NewGame.tsx
 
 import { useState } from 'react';
-import { Button } from 'react-native';
-import { View } from 'react-native-reanimated/lib/typescript/Animated';
+import {
+    View,
+    Button,
+    SafeAreaView,
+    StyleSheet,
+    TouchableOpacity,
+    Text,
+} from 'react-native';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation/navigationType';
+
+// Composant
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import CreateAdventureForm from '../components/CreateAdventureForm';
+import JoinAdventureForm from '../components/JoinAdventureForm';
 
 const NewAdventures = () => {
-    const [mode, setMode] = useState<'create' | 'join' | null>(null);
+    const route = useRoute<RouteProp<RootStackParamList, 'NewAdventure'>>();
+    const [mode, setMode] = useState<string | false>(false);
+
+    const params = route.params;
+    if (params) setMode(params.mode);
 
     return (
-        <View>
-            {!mode && (
-                <>
-                    <Button
-                        title="Créer une aventure (MJ)"
-                        onPress={() => setMode('create')}
-                    />
-                    <Button
-                        title="Rejoindre une aventure (PJ)"
-                        onPress={() => setMode('join')}
-                    />
-                </>
-            )}
+        <SafeAreaView style={styles.container}>
+            <Header context="return" />
+            <View style={styles.content}>
+                {!mode && (
+                    <>
+                        <TouchableOpacity
+                            style={styles.adventureButton}
+                            onPress={() => setMode('create')}
+                        >
+                            <Text style={styles.buttonText}>
+                                Créer une aventure (MJ)
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.adventureButton}
+                            onPress={() => setMode('join')}
+                        >
+                            <Text style={styles.buttonText}>
+                                Rejoindre une aventure (PJ)
+                            </Text>
+                        </TouchableOpacity>
+                    </>
+                )}
 
-            {mode === 'create' && <CreateAdventureForm />}
-            {/* {mode === 'join' && <JoinAdventureForm />} */}
-        </View>
+                {mode === 'create' && <CreateAdventureForm />}
+                {mode === 'join' && <JoinAdventureForm />}
+            </View>
+            <Footer context="home" currentPage="home" />
+        </SafeAreaView>
     );
 };
 
 export default NewAdventures;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#f5f5f5',
+    },
+    content: {
+        flex: 1,
+        padding: 16,
+    },
+    adventureButton: {
+        backgroundColor: '#591802',
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+});
