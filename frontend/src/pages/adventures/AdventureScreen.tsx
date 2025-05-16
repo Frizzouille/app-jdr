@@ -11,6 +11,7 @@ import { AxiosError } from 'axios';
 import API from '../../services/api';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import { useHeaderPresets } from '../../components/HeaderPresets';
 
 const AdventureScreen = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'Adventure'>>();
@@ -51,21 +52,25 @@ const AdventureScreen = () => {
 
     if (isLoading) {
         return (
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
-                <Text>Chargement...</Text>
-            </View>
+            <SafeAreaView style={styles.container}>
+                <Header {...useHeaderPresets('adventures')} />
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Text>Chargement...</Text>
+                </View>
+                <Footer context="adventures" currentPage="characters" />
+            </SafeAreaView>
         );
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header context="adventures" />
+            <Header {...useHeaderPresets('adventures')} />
             <View style={styles.content}>
                 <Text>Tu es sur la partie {dataAdventure.title}</Text>
             </View>

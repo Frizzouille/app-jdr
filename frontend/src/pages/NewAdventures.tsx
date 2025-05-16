@@ -17,6 +17,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CreateAdventureForm from '../components/CreateAdventureForm';
 import JoinAdventureForm from '../components/JoinAdventureForm';
+import { useHeaderPresets } from '../components/HeaderPresets';
 
 const NewAdventures = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'NewAdventure'>>();
@@ -27,7 +28,7 @@ const NewAdventures = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header context="return" />
+            <Header {...useHeaderPresets('return')} />
             <View style={styles.content}>
                 {!mode && (
                     <>

@@ -24,8 +24,8 @@ import API from '../services/api';
 // Composant
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { useHeaderPresets } from '../components/HeaderPresets';
 
-// Types (Define or import your Adventure type)
 interface Adventure {
     _id: string;
     title: string;
@@ -91,7 +91,7 @@ const HomeScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header context="home" />
+            <Header {...useHeaderPresets('home')} />
             <View style={styles.content}>
                 <TouchableOpacity
                     style={styles.newAdventureButton}
