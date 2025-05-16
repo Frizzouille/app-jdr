@@ -23,7 +23,7 @@ export class InvitationController {
     @HttpCode(HttpStatus.OK)
     async getAdventures(@Request() req: Request & { user: UserPayload }) {
         const userId = req.user.userId;
-        const invitations = await this.invitationService.getInvitationsByUserId(
+        const invitations = await this.invitationService.getInvitationsByUser(
             new Types.ObjectId(userId),
         );
         return { invitations };

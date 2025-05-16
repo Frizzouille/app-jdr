@@ -15,15 +15,16 @@ import { User } from 'src/user/schemas/user.schema';
 export class InvitationService {
     constructor(
         @InjectModel(Invitation.name)
-        private InvitationModel: Model<InvitationDocument>,
-        private readonly AdventureService: AdventureService,
+        private invitationModel: Model<InvitationDocument>,
+        private readonly adventureService: AdventureService,
     ) {}
 
     // Trouve les invitations aux aventures liées à un user
-    async getInvitationsByUserId(
+    async getInvitationsByUser(
         userId: Types.ObjectId,
     ): Promise<Invitation[] | null> {
-        return this.InvitationModel.find({ userId, status: 'invited' })
+        return this.invitationModel
+            .find({ userId, status: 'invited' })
             .populate({
                 path: 'adventureId',
                 select: 'title',
@@ -37,7 +38,7 @@ export class InvitationService {
         adventureId: Types.ObjectId,
         invitedUsers: User[] | null,
     ) {
-        const adventure = await this.AdventureService.getAdventureById(
+        const adventure = await this.adventureService.getAdventureById(
             adventureId,
         );
 
@@ -76,7 +77,7 @@ export class InvitationService {
             status: 'invited',
         }));
 
-        return this.InvitationModel.insertMany(invitations);
+        return this.invitationModel.insertMany(invitations);
     }
 
     async updateInvitationStatus(
@@ -84,14 +85,16 @@ export class InvitationService {
         invitationId: Types.ObjectId,
         status: string,
     ): Promise<Invitation | null> {
-        const invitation = await this.InvitationModel.findOneAndUpdate(
-            { _id: invitationId, userId },
-            { status },
-            { new: true },
-        ).exec();
+        const invitation = await this.invitationModel
+            .findOneAndUpdate(
+                { _id: invitationId, userId },
+                { status },
+                { new: true },
+            )
+            .exec();
 
         if (invitation && status === 'accepted') {
-            this.AdventureService.addUser(invitation.adventureId, userId);
+            this.adventureService.addUser(invitation.adventureId, userId);
         }
         return invitation;
     }

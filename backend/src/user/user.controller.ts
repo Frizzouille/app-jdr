@@ -57,8 +57,8 @@ export class UserController {
 
     @Get(':id/adventures')
     @HttpCode(HttpStatus.OK)
-    async getAdventuresByUserId(@Param('id') id: string) {
-        return await this.adventureService.getAdventuresByUserId(
+    async getAdventuresByUser(@Param('id') id: string) {
+        return await this.adventureService.getAdventuresByUser(
             new Types.ObjectId(id),
         );
     }

@@ -7,6 +7,7 @@ import { AdventureService } from './adventure.service';
 import { AdventureController } from './adventure.controller';
 import { InvitationModule } from 'src/invitation/invitation.module';
 import { UserModule } from 'src/user/user.module';
+import { CharacterModule } from 'src/character/character.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { UserModule } from 'src/user/user.module';
         ]),
         forwardRef(() => InvitationModule),
         forwardRef(() => UserModule),
+        forwardRef(() => CharacterModule),
     ],
     controllers: [AdventureController],
     providers: [AdventureService],
