@@ -58,7 +58,12 @@ export class AdventureController {
             new Types.ObjectId(userId),
             new Types.ObjectId(id),
         );
-        return { adventure };
+        const character =
+            await this.characterService.getCharactersByUserAndAdventure(
+                new Types.ObjectId(userId),
+                new Types.ObjectId(id),
+            );
+        return { adventure, character };
     }
 
     @UseGuards(JwtAuthGuard)

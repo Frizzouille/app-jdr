@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
         borderColor: '#333',
     },
     title: {
-        color: '#fff',
         fontSize: 20,
         fontWeight: 'bold',
     },

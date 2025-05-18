@@ -114,7 +114,7 @@ const JoinAdventureForm = () => {
 
     useEffect(() => {
         if (adventureId)
-            navigation.navigate('Adventure', {
+            navigation.navigate('AdventurePlayer', {
                 idAdventure: adventureId,
             });
     }, [adventureId]);

@@ -6,13 +6,13 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 // Navigation
 import { RootStackParamList } from '../../navigation/navigationType';
 
-import { useUser } from '../../context/userContext';
 import { AxiosError } from 'axios';
 import API from '../../services/api';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { useHeaderPresets } from '../../components/HeaderPresets';
 import { useFooterPresets } from '../../components/FooterPresets';
+import CreateCharacterForm from '../../components/CreateCharacterForm';
 
 const AdventurePlayer = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'AdventureMaster'>>();
@@ -21,16 +21,18 @@ const AdventurePlayer = () => {
     const [dataAdventure, setDataAdventure] = useState<{ title: string }>({
         title: '',
     });
+    const [characters, setCharacters] = useState<{}[]>(new Array());
 
     const { idAdventure } = route.params;
-    const { accessToken } = useUser();
 
     useEffect(() => {
-        async function getAdventures() {
+        async function getAdventuresById() {
             try {
                 const response = await API.get('/adventures/' + idAdventure);
 
                 setDataAdventure(response.data.adventure);
+                setCharacters(response.data.characters);
+
                 setIsLoading(false);
             } catch (error) {
                 if (error instanceof AxiosError) {
@@ -48,13 +50,16 @@ const AdventurePlayer = () => {
                 }
             }
         }
-        if (accessToken) getAdventures();
-    }, [accessToken]);
+        getAdventuresById();
+    }, []);
 
     if (isLoading) {
         return (
             <SafeAreaView style={styles.container}>
-                <Header {...useHeaderPresets('adventures')} />
+                <Header
+                    {...(useHeaderPresets('adventures'),
+                    { title: dataAdventure.title })}
+                />
                 <View
                     style={{
                         flex: 1,
@@ -69,9 +74,24 @@ const AdventurePlayer = () => {
         );
     }
 
+    const headerProp = {
+        ...useHeaderPresets('adventures'),
+        title: dataAdventure.title,
+    };
+    if (!characters || characters.length === 0) {
+        return (
+            <SafeAreaView style={styles.container}>
+                <Header {...headerProp} />
+                <View style={styles.content}>
+                    <CreateCharacterForm />
+                </View>
+                <Footer {...useFooterPresets('adventures')} />
+            </SafeAreaView>
+        );
+    }
     return (
         <SafeAreaView style={styles.container}>
-            <Header {...useHeaderPresets('adventures')} />
+            <Header {...headerProp} />
             <View style={styles.content}>
                 <Text>Tu es sur la partie {dataAdventure.title}</Text>
             </View>

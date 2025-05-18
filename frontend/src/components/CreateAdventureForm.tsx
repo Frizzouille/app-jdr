@@ -46,7 +46,7 @@ const CreateAdventureForm = () => {
 
     useEffect(() => {
         if (dataAdventure?.title)
-            navigation.navigate('Adventure', {
+            navigation.navigate('AdventureMaster', {
                 idAdventure: dataAdventure._id,
             });
     }, [dataAdventure]);

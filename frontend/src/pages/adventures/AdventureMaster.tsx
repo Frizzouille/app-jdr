@@ -23,8 +23,6 @@ const AdventureMaster = () => {
     });
 
     const { idAdventure } = route.params;
-    const { accessToken } = useUser();
-
     useEffect(() => {
         async function getAdventures() {
             try {
@@ -48,8 +46,8 @@ const AdventureMaster = () => {
                 }
             }
         }
-        if (accessToken) getAdventures();
-    }, [accessToken]);
+        getAdventures();
+    }, []);
 
     if (isLoading) {
         return (

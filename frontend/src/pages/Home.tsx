@@ -40,8 +40,6 @@ const HomeScreen = () => {
     const [adventures, setAdventures] = useState<Adventure[]>([]);
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-    const isFocused = useIsFocused();
-
     useEffect(() => {
         const fetchAdventures = async () => {
             if (!accessToken) {
@@ -73,7 +71,7 @@ const HomeScreen = () => {
         };
 
         fetchAdventures();
-    }, [isFocused]);
+    }, []);
 
     const handleNewAdventure = () => {
         navigation.navigate('NewAdventure');
