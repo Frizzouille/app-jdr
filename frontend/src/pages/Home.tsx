@@ -22,10 +22,10 @@ import { useUser } from '../context/userContext';
 import API from '../services/api';
 
 // Composant
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import { useHeaderPresets } from '../components/HeaderPresets';
-import { useFooterPresets } from '../components/FooterPresets';
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
+import { useHeaderPresets } from '../components/Header/HeaderPresets';
+import { useFooterPresets } from '../components/Footer/FooterPresets';
 
 interface Adventure {
     _id: string;

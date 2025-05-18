@@ -9,10 +9,10 @@ import { RootStackParamList } from '../../navigation/navigationType';
 import { useUser } from '../../context/userContext';
 import { AxiosError } from 'axios';
 import API from '../../services/api';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import { useHeaderPresets } from '../../components/HeaderPresets';
-import { useFooterPresets } from '../../components/FooterPresets';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
+import { useHeaderPresets } from '../../components/Header/HeaderPresets';
+import { useFooterPresets } from '../../components/Footer/FooterPresets';
 
 const AdventureMaster = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'AdventureMaster'>>();

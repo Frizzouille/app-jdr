@@ -8,11 +8,11 @@ import { RootStackParamList } from '../../navigation/navigationType';
 
 import { AxiosError } from 'axios';
 import API from '../../services/api';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import { useHeaderPresets } from '../../components/HeaderPresets';
-import { useFooterPresets } from '../../components/FooterPresets';
-import CreateCharacterForm from '../../components/CreateCharacterForm';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
+import { useHeaderPresets } from '../../components/Header/HeaderPresets';
+import { useFooterPresets } from '../../components/Footer/FooterPresets';
+import CreateCharacterForm from '../../components/Character/CreateCharacterForm';
 
 const AdventurePlayer = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'AdventureMaster'>>();

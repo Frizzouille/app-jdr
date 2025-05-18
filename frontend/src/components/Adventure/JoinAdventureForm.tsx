@@ -6,11 +6,11 @@ import {
     TouchableOpacity,
     FlatList,
 } from 'react-native';
-import API from '../services/api';
+import API from '../../services/api';
 import { AxiosError } from 'axios';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/navigationType';
+import { RootStackParamList } from '../../navigation/navigationType';
 
 interface Invitation {
     _id: string;

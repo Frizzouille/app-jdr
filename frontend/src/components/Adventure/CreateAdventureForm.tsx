@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/navigationType';
-import API from '../services/api';
+import { RootStackParamList } from '../../navigation/navigationType';
+import API from '../../services/api';
 import { AxiosError } from 'axios';
 
 const CreateAdventureForm = () => {
