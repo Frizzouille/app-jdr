@@ -22,9 +22,6 @@ export class Adventure {
     @Prop()
     image: string;
 
-    @Prop({ type: Date, default: null })
-    lastOpened: Date;
-
     @Prop({ type: [Types.ObjectId], ref: 'User' })
     playersId: Types.ObjectId[];
 }

@@ -46,10 +46,16 @@ export class AdventureController {
         return { adventures };
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    async getAdventureById(@Param('id') id: string) {
+    async getAdventureById(
+        @Request() req: { user: UserPayload },
+        @Param('id') id: string,
+    ) {
+        const userId = req.user.userId;
         const adventure = await this.adventureService.getAdventureById(
+            new Types.ObjectId(userId),
             new Types.ObjectId(id),
         );
         return { adventure };

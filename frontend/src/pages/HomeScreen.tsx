@@ -11,7 +11,9 @@ import {
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AxiosError } from 'axios'; // Added for error handling
-
+import { Ionicons } from '@expo/vector-icons';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 // Navigation
 import { RootStackParamList } from '../navigation/navigationType';
 
@@ -78,7 +80,11 @@ const HomeScreen = () => {
         navigation.navigate('NewAdventure');
     };
 
-    const renderAdventureItem = ({ item }: { item: Adventure }) => (
+    const renderAdventureItem = ({
+        item,
+    }: {
+        item: Adventure & { userRole?: string };
+    }) => (
         <TouchableOpacity
             style={styles.adventureItem}
             onPress={() =>
@@ -86,6 +92,11 @@ const HomeScreen = () => {
             }
         >
             <Text style={styles.adventureTitle}>{item.title}</Text>
+            {item.userRole === 'creator' ? (
+                <FontAwesome5 name="crown" size={24} color="black" />
+            ) : (
+                <MaterialCommunityIcons name="sword" size={24} color="black" />
+            )}
         </TouchableOpacity>
     );
 
@@ -136,6 +147,9 @@ const styles = StyleSheet.create({
         paddingBottom: 16,
     },
     adventureItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         backgroundColor: 'white',
         padding: 16,
         borderRadius: 8,

@@ -11,7 +11,7 @@ import LoginS from './src/pages/login/LoginScreen';
 import RegisterS from './src/pages/login/RegisterScreen';
 import HomeS from './src/pages/HomeScreen';
 import AdventureS from './src/pages/adventures/AdventureScreen';
-import NewAdventure from './src/pages/NewAdventures';
+import NewAdventure from './src/pages/adventures/NewAdventures';
 
 // Contexte
 import { UserProvider, useUser } from './src/context/userContext';

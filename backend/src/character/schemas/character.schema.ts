@@ -30,13 +30,13 @@ export class Character {
     @Prop({ required: true })
     race: string;
 
-    @Prop({ required: true })
+    @Prop({ type: Object, required: true })
     classes: { class: string; level: number }[];
 
     @Prop({ required: true })
     background: string; // Historique
 
-    @Prop({ required: true })
+    @Prop({ type: Object, required: true })
     stats: {
         strength: number;
         dexterity: number;

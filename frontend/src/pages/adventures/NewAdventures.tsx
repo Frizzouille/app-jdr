@@ -10,14 +10,14 @@ import {
     Text,
 } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '../navigation/navigationType';
+import { RootStackParamList } from '../../navigation/navigationType';
 
 // Composant
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import CreateAdventureForm from '../components/CreateAdventureForm';
-import JoinAdventureForm from '../components/JoinAdventureForm';
-import { useHeaderPresets } from '../components/HeaderPresets';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import CreateAdventureForm from '../../components/CreateAdventureForm';
+import JoinAdventureForm from '../../components/JoinAdventureForm';
+import { useHeaderPresets } from '../../components/HeaderPresets';
 
 const NewAdventures = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'NewAdventure'>>();

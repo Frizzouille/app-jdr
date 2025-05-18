@@ -1,9 +1,8 @@
 import {
-    Body,
     HttpException,
     HttpStatus,
     Injectable,
-    Post,
+    UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -39,18 +38,13 @@ export class InvitationService {
         invitedUsers: User[] | null,
     ) {
         const adventure = await this.adventureService.getAdventureById(
+            userId,
             adventureId,
         );
 
-        if (adventure === null || adventure.userId != userId) {
-            throw new HttpException(
-                {
-                    message: [
-                        "Vous ne pouvez pas inviter un joueur dans une aventure que vous n'avez pas créé.",
-                    ],
-                    statusCode: HttpStatus.UNAUTHORIZED,
-                },
-                HttpStatus.UNAUTHORIZED,
+        if (adventure === null) {
+            throw new UnauthorizedException(
+                "Vous ne pouvez pas inviter un joueur dans une aventure que vous n'avez pas créé.",
             );
         }
 
