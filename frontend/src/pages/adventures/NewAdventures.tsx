@@ -17,7 +17,9 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import CreateAdventureForm from '../../components/CreateAdventureForm';
 import JoinAdventureForm from '../../components/JoinAdventureForm';
+
 import { useHeaderPresets } from '../../components/HeaderPresets';
+import { useFooterPresets } from '../../components/FooterPresets';
 
 const NewAdventures = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'NewAdventure'>>();
@@ -54,7 +56,7 @@ const NewAdventures = () => {
                 {mode === 'create' && <CreateAdventureForm />}
                 {mode === 'join' && <JoinAdventureForm />}
             </View>
-            <Footer context="home" currentPage="home" />
+            <Footer {...useFooterPresets('home')} />
         </SafeAreaView>
     );
 };

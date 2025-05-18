@@ -11,8 +11,6 @@ import {
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AxiosError } from 'axios'; // Added for error handling
-import { Ionicons } from '@expo/vector-icons';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 // Navigation
 import { RootStackParamList } from '../navigation/navigationType';
@@ -27,6 +25,7 @@ import API from '../services/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useHeaderPresets } from '../components/HeaderPresets';
+import { useFooterPresets } from '../components/FooterPresets';
 
 interface Adventure {
     _id: string;
@@ -84,21 +83,33 @@ const HomeScreen = () => {
         item,
     }: {
         item: Adventure & { userRole?: string };
-    }) => (
-        <TouchableOpacity
-            style={styles.adventureItem}
-            onPress={() =>
-                navigation.navigate('Adventure', { idAdventure: item._id })
-            }
-        >
-            <Text style={styles.adventureTitle}>{item.title}</Text>
-            {item.userRole === 'creator' ? (
-                <FontAwesome5 name="crown" size={24} color="black" />
-            ) : (
+    }) => {
+        return item.userRole === 'creator' ? (
+            <TouchableOpacity
+                style={styles.adventureItem}
+                onPress={() =>
+                    navigation.navigate('AdventureMaster', {
+                        idAdventure: item._id,
+                    })
+                }
+            >
+                <Text style={styles.adventureTitle}>{item.title}</Text>
+                <MaterialCommunityIcons name="crown" size={24} color="black" />
+            </TouchableOpacity>
+        ) : (
+            <TouchableOpacity
+                style={styles.adventureItem}
+                onPress={() =>
+                    navigation.navigate('AdventurePlayer', {
+                        idAdventure: item._id,
+                    })
+                }
+            >
+                <Text style={styles.adventureTitle}>{item.title}</Text>
                 <MaterialCommunityIcons name="sword" size={24} color="black" />
-            )}
-        </TouchableOpacity>
-    );
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -118,7 +129,7 @@ const HomeScreen = () => {
                     contentContainerStyle={styles.listContainer}
                 />
             </View>
-            <Footer context="Home" currentPage="Home" />
+            <Footer {...useFooterPresets('home')} />
         </SafeAreaView>
     );
 };

@@ -12,9 +12,10 @@ import API from '../../services/api';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { useHeaderPresets } from '../../components/HeaderPresets';
+import { useFooterPresets } from '../../components/FooterPresets';
 
-const AdventureScreen = () => {
-    const route = useRoute<RouteProp<RootStackParamList, 'Adventure'>>();
+const AdventurePlayer = () => {
+    const route = useRoute<RouteProp<RootStackParamList, 'AdventureMaster'>>();
 
     const [isLoading, setIsLoading] = useState(true);
     const [dataAdventure, setDataAdventure] = useState<{ title: string }>({
@@ -63,7 +64,7 @@ const AdventureScreen = () => {
                 >
                     <Text>Chargement...</Text>
                 </View>
-                <Footer context="adventures" currentPage="characters" />
+                <Footer {...useFooterPresets('adventures')} />
             </SafeAreaView>
         );
     }
@@ -74,7 +75,7 @@ const AdventureScreen = () => {
             <View style={styles.content}>
                 <Text>Tu es sur la partie {dataAdventure.title}</Text>
             </View>
-            <Footer context="adventures" currentPage="characters" />
+            <Footer {...useFooterPresets('adventures')} />
         </SafeAreaView>
     );
 };
@@ -90,4 +91,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AdventureScreen;
+export default AdventurePlayer;
