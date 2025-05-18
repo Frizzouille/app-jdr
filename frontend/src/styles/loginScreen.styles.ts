@@ -6,6 +6,9 @@ export const loginStyle = StyleSheet.create({
     container:{
         backgroundColor: colors.light,
     },
+    logo:{
+        width: 200,
+    },
     title: {
         fontSize: 28,
         marginBottom: 16,

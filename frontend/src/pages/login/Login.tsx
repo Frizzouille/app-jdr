@@ -4,6 +4,7 @@ import {
     View,
     Text,
     TextInput,
+    Image,
     Button,
     //@ts-ignore Ajouter pour désactiver une erreur dans vscode
     CheckBox,
@@ -69,8 +70,12 @@ const LoginScreen = () => {
     return (
         <View style={cardStyle.container}>
             <View style={cardStyle.card}>
+                <Image 
+                    source={require('../../img/logoTemp.png')} 
+                    style={loginStyle.logo}
+                    resizeMode="contain" 
+                />
                 <Text style={loginStyle.title}>Connexion</Text>
-
                 <TextInput
                     style={loginStyle.input}
                     placeholder="Email"
@@ -80,7 +85,7 @@ const LoginScreen = () => {
 
                 <TextInput
                     style={loginStyle.input}
-                    placeholder="Mot de passe"
+                    placeholder="Password"
                     secureTextEntry
                     onChangeText={setPassword}
                     value={password}
@@ -91,15 +96,15 @@ const LoginScreen = () => {
                         onValueChange={setRememberMe}
                     />
                     <Text style={loginStyle.checkboxLabel}>
-                        Se souvenir de moi
+                        Keep me logged in.
                     </Text>
                 </View>
                 <View style={loginStyle.button}>
-                    <Button title="Se connecter" onPress={handleLogin} />
+                    <Button title="Log inreg" onPress={handleLogin} />
                 </View>
                 <View style={loginStyle.button}>
                     <Button
-                        title="Créer un compte"
+                        title="Register"
                         onPress={() => navigation.navigate('Register')}
                         color="#00a35c"
                     />

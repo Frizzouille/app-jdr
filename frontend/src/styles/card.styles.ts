@@ -5,6 +5,7 @@ import { colors } from './colors';
 export const cardStyle = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%',
         justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: colors.light,
@@ -12,7 +13,6 @@ export const cardStyle = StyleSheet.create({
     card: {
         alignItems: 'center',
         padding: 10,
-        backgroundColor: 'white',
         borderRadius: 10,
     },
 });
