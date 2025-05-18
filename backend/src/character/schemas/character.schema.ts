@@ -47,9 +47,6 @@ export class Character {
     };
 
     @Prop()
-    description: string;
-
-    @Prop()
     backstory: string;
 }
 

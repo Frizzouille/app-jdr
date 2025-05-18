@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -30,19 +31,52 @@ type StatsStepProps = {
 };
 
 export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
+    const maxCreditPoint = 27;
+    const [creditPoint, setCreditPoint] = useState(maxCreditPoint);
+    const [repartitionPoint, setRepartitionPoint] = useState<{
+        [key: string]: number;
+    }>({});
+
     // Initialiser les propriétés manquantes à 10
-    for (const stat of statsList) {
-        if (!(stat in stats)) {
-            stats[stat] = 10;
+    useEffect(() => {
+        let newRepartitionPoint = repartitionPoint;
+        for (const stat of statsList) {
+            if (!(stat in stats)) {
+                stats[stat] = 10;
+            }
+            newRepartitionPoint[stat] = stats[stat];
         }
-    }
+
+        setRepartitionPoint(newRepartitionPoint);
+    }, []);
+
+    useEffect(() => {
+        let somme = 0;
+
+        for (const key in repartitionPoint) {
+            const value = repartitionPoint[key];
+            if (value > 8) somme += value - 8;
+        }
+
+        setCreditPoint(maxCreditPoint - somme);
+    }, [repartitionPoint]);
 
     const handleChange = (key: string, delta: number) => {
         if (!stats) return; // Ne rien faire si stats est undefined
 
+        let val = null;
+        if (stats[key] === 15 && delta === 1) val = 15;
+        else val = Math.max(0, (!stats ? 10 : stats[key]) + delta);
+
+        const newRepartitionPoint = {
+            ...repartitionPoint,
+            [key]: val,
+        };
+        setRepartitionPoint(newRepartitionPoint);
+
         onUpdate({
             ...stats,
-            [key]: Math.max(0, (!stats ? 10 : stats[key]) + delta),
+            [key]: val,
         });
     };
 
@@ -57,15 +91,18 @@ export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
 
     return (
         <View>
+            <View>
+                <Text style={[styles.label, { fontWeight: 'bold' }]}>
+                    Niveau: 1
+                </Text>
+            </View>
             <View style={[styles.row, { marginBottom: 4 }]}>
                 <Text style={[styles.label, { fontWeight: 'bold' }]}>
                     Caractéristique
                 </Text>
-                <View style={styles.button} />{' '}
-                {/* Placeholder pour alignement bouton - */}
+                <View /> {/* Placeholder pour alignement bouton - */}
                 <Text style={[styles.value, { fontWeight: 'bold' }]}>Base</Text>
-                <View style={styles.button} />{' '}
-                {/* Placeholder pour alignement bouton + */}
+                <View /> {/* Placeholder pour alignement bouton + */}
                 <Text style={[styles.final, { fontWeight: 'bold' }]}>
                     Valeur finale
                 </Text>
@@ -110,6 +147,11 @@ export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
                     </Text>
                 </View>
             ))}
+            <View>
+                <Text style={[styles.label, { fontWeight: 'bold' }]}>
+                    Nombre de points restants: {creditPoint} / {maxCreditPoint}
+                </Text>
+            </View>
         </View>
     );
 }
