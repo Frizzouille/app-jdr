@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 import CharacterCreationNavigation from '../Adventure/CharacterCreationNavigation';
 import RaceStep from './RaceStep';
+import StatsStep from './StatsStep';
 
 export type CharacterFormData = {
     name: string;
@@ -11,14 +12,7 @@ export type CharacterFormData = {
         level: number;
     }[];
     background: string;
-    stats: {
-        strength: number;
-        dexterity: number;
-        constitution: number;
-        intelligence: number;
-        wisdom: number;
-        charisma: number;
-    };
+    stats: { [key: string]: number };
     description: string;
     backstory: string;
 };
@@ -44,6 +38,17 @@ export default function CharacterCreationScreen() {
                 <RaceStep
                     dataCharacter={characterData}
                     updateCharacter={updateCharacter}
+                />
+            )}
+            {step === 1 && (
+                <StatsStep
+                    stats={characterData.stats || {}}
+                    onUpdate={(updatedStats: { [key: string]: number }) =>
+                        updateCharacter({
+                            ...characterData,
+                            stats: updatedStats,
+                        })
+                    }
                 />
             )}
             <CharacterCreationNavigation

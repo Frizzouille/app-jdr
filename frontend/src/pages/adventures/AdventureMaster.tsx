@@ -6,7 +6,6 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 // Navigation
 import { RootStackParamList } from '../../navigation/navigationType';
 
-import { useUser } from '../../context/userContext';
 import { AxiosError } from 'axios';
 import API from '../../services/api';
 import Header from '../../components/Header/Header';
