@@ -9,11 +9,13 @@ import { RootStackParamList } from '../../navigation/navigationType';
 import { useUser } from '../../context/userContext';
 import { AxiosError } from 'axios';
 import API from '../../services/api';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
+import { useHeaderPresets } from '../../components/Header/HeaderPresets';
+import { useFooterPresets } from '../../components/Footer/FooterPresets';
 
-const AdventureScreen = () => {
-    const route = useRoute<RouteProp<RootStackParamList, 'Adventure'>>();
+const AdventureMaster = () => {
+    const route = useRoute<RouteProp<RootStackParamList, 'AdventureMaster'>>();
 
     const [isLoading, setIsLoading] = useState(true);
     const [dataAdventure, setDataAdventure] = useState<{ title: string }>({
@@ -21,16 +23,10 @@ const AdventureScreen = () => {
     });
 
     const { idAdventure } = route.params;
-    const { accessToken } = useUser();
-
     useEffect(() => {
         async function getAdventures() {
             try {
-                const response = await API.get('/adventures/' + idAdventure, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                });
+                const response = await API.get('/adventures/' + idAdventure);
 
                 setDataAdventure(response.data.adventure);
                 setIsLoading(false);
@@ -50,30 +46,35 @@ const AdventureScreen = () => {
                 }
             }
         }
-        if (accessToken) getAdventures();
-    }, [accessToken]);
+        getAdventures();
+    }, []);
 
     if (isLoading) {
         return (
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
-                <Text>Chargement...</Text>
-            </View>
+            <SafeAreaView style={styles.container}>
+                <Header {...useHeaderPresets('adventures')} />
+
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Text>Chargement...</Text>
+                </View>
+                <Footer {...useFooterPresets('adventures')} />
+            </SafeAreaView>
         );
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header context="adventures" />
+            <Header {...useHeaderPresets('adventures')} />
             <View style={styles.content}>
                 <Text>Tu es sur la partie {dataAdventure.title}</Text>
             </View>
-            <Footer context="adventures" currentPage="characters" />
+            <Footer {...useFooterPresets('adventures')} />
         </SafeAreaView>
     );
 };
@@ -89,4 +90,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AdventureScreen;
+export default AdventureMaster;

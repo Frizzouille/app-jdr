@@ -24,7 +24,7 @@ export class Invitation {
     })
     userId: Types.ObjectId;
 
-    @Prop({ required: true, default: 'invitation' })
+    @Prop({ required: true, default: 'invited' })
     status: string;
 }
 

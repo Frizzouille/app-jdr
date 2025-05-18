@@ -4,18 +4,14 @@ import {
     View,
     Text,
     StyleSheet,
-    TextInput,
     TouchableOpacity,
-    Image,
-    ScrollView,
     FlatList, // Added FlatList for carousel
-    Dimensions,
     SafeAreaView, // Added Dimensions for responsive item width
 } from 'react-native';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AxiosError } from 'axios'; // Added for error handling
-
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 // Navigation
 import { RootStackParamList } from '../navigation/navigationType';
 
@@ -26,10 +22,11 @@ import { useUser } from '../context/userContext';
 import API from '../services/api';
 
 // Composant
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
+import { useHeaderPresets } from '../components/Header/HeaderPresets';
+import { useFooterPresets } from '../components/Footer/FooterPresets';
 
-// Types (Define or import your Adventure type)
 interface Adventure {
     _id: string;
     title: string;
@@ -39,11 +36,9 @@ interface Adventure {
 // --- Home Screen Component ---
 const HomeScreen = () => {
     // Assuming accessToken is provided by useUser context
-    const { dataUser, accessToken, logoutUser } = useUser();
+    const { accessToken, logoutUser } = useUser();
     const [adventures, setAdventures] = useState<Adventure[]>([]);
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-    const isFocused = useIsFocused();
 
     useEffect(() => {
         const fetchAdventures = async () => {
@@ -57,11 +52,7 @@ const HomeScreen = () => {
             try {
                 const response = await API.get<{ adventures: Adventure[] }>(
                     `/adventures?sort=${sort}&order=${order}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                    },
+                    {},
                 );
                 setAdventures(response.data.adventures || []);
             } catch (error) {
@@ -80,26 +71,47 @@ const HomeScreen = () => {
         };
 
         fetchAdventures();
-    }, [isFocused]);
+    }, []);
 
     const handleNewAdventure = () => {
-        navigation.navigate('CreateAdventure');
+        navigation.navigate('NewAdventure');
     };
 
-    const renderAdventureItem = ({ item }: { item: Adventure }) => (
-        <TouchableOpacity
-            style={styles.adventureItem}
-            onPress={() =>
-                navigation.navigate('Adventure', { idAdventure: item._id })
-            }
-        >
-            <Text style={styles.adventureTitle}>{item.title}</Text>
-        </TouchableOpacity>
-    );
+    const renderAdventureItem = ({
+        item,
+    }: {
+        item: Adventure & { userRole?: string };
+    }) => {
+        return item.userRole === 'creator' ? (
+            <TouchableOpacity
+                style={styles.adventureItem}
+                onPress={() =>
+                    navigation.navigate('AdventureMaster', {
+                        idAdventure: item._id,
+                    })
+                }
+            >
+                <Text style={styles.adventureTitle}>{item.title}</Text>
+                <MaterialCommunityIcons name="crown" size={24} color="black" />
+            </TouchableOpacity>
+        ) : (
+            <TouchableOpacity
+                style={styles.adventureItem}
+                onPress={() =>
+                    navigation.navigate('AdventurePlayer', {
+                        idAdventure: item._id,
+                    })
+                }
+            >
+                <Text style={styles.adventureTitle}>{item.title}</Text>
+                <MaterialCommunityIcons name="sword" size={24} color="black" />
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header context="home" />
+            <Header {...useHeaderPresets('home')} />
             <View style={styles.content}>
                 <TouchableOpacity
                     style={styles.newAdventureButton}
@@ -115,7 +127,7 @@ const HomeScreen = () => {
                     contentContainerStyle={styles.listContainer}
                 />
             </View>
-            <Footer context="Home" currentPage="Home" />
+            <Footer {...useFooterPresets('home')} />
         </SafeAreaView>
     );
 };
@@ -144,6 +156,9 @@ const styles = StyleSheet.create({
         paddingBottom: 16,
     },
     adventureItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         backgroundColor: 'white',
         padding: 16,
         borderRadius: 8,

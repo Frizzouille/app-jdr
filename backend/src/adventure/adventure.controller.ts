@@ -15,15 +15,17 @@ import { CreateAdventureDto } from './dto/create.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserPayload } from 'src/auth/jwt.strategy';
 import { InvitationService } from 'src/invitation/invitation.service';
+import { CharacterService } from 'src/character/character.service';
 import { UserService } from 'src/user/user.service';
-import { ObjectId, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
 @Controller('adventures')
 export class AdventureController {
     constructor(
         private readonly adventureService: AdventureService,
-        private readonly InvitationService: InvitationService,
-        private readonly UserService: UserService,
+        private readonly invitationService: InvitationService,
+        private readonly characterService: CharacterService,
+        private readonly userService: UserService,
     ) {}
     // localhost:3000/adventures
 
@@ -36,7 +38,7 @@ export class AdventureController {
         @Query('order') order: string,
     ) {
         const userId = req.user.userId;
-        const adventures = await this.adventureService.getAdventuresByUserId(
+        const adventures = await this.adventureService.getAdventuresByUser(
             new Types.ObjectId(userId),
             sort,
             order,
@@ -44,22 +46,35 @@ export class AdventureController {
         return { adventures };
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    async getAdventureById(@Param('id') id: string) {
+    async getAdventureById(
+        @Request() req: { user: UserPayload },
+        @Param('id') id: string,
+    ) {
+        const userId = req.user.userId;
         const adventure = await this.adventureService.getAdventureById(
+            new Types.ObjectId(userId),
             new Types.ObjectId(id),
         );
-        return { adventure };
+        const character =
+            await this.characterService.getCharactersByUserAndAdventure(
+                new Types.ObjectId(userId),
+                new Types.ObjectId(id),
+            );
+        return { adventure, character };
     }
 
     @UseGuards(JwtAuthGuard)
     @Post('create')
+    @HttpCode(HttpStatus.CREATED)
     async createAdventure(
         @Request() req: { user: UserPayload },
         @Body() createAdventureDto: CreateAdventureDto,
     ) {
         const userId = req.user.userId;
+
         return await this.adventureService.createAdventure(
             new Types.ObjectId(userId),
             createAdventureDto,
@@ -68,19 +83,33 @@ export class AdventureController {
 
     @UseGuards(JwtAuthGuard)
     @Post(':id/invite')
+    @HttpCode(HttpStatus.CREATED)
     async inviteUsers(
         @Request() req: { user: UserPayload },
-        @Param('id') aventureId: string,
-        @Body() post: { invitedUsers: string[] },
+        @Body() post: { aventureId: string; invitedUsers: string[] },
     ) {
         const userId = req.user.userId;
-        const invitedUsersId = await this.UserService.getUsersByEmail(
+        const invitedUsersId = await this.userService.getUsersByEmail(
             post.invitedUsers,
         );
-        return await this.InvitationService.inviteUsers(
+        return await this.invitationService.inviteUsers(
             new Types.ObjectId(userId),
-            new Types.ObjectId(aventureId),
+            new Types.ObjectId(post.aventureId),
             invitedUsersId,
+        );
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('characters')
+    @HttpCode(HttpStatus.OK)
+    async getCharacters(
+        @Request() req: { user: UserPayload },
+        @Body() post: { adventureId: string },
+    ) {
+        const userId = req.user.userId;
+        return await this.characterService.getCharactersByUserAndAdventure(
+            new Types.ObjectId(userId),
+            new Types.ObjectId(post.adventureId),
         );
     }
 }

@@ -4,17 +4,14 @@ import {
     Text,
     TextInput,
     Button,
-    SafeAreaView,
     StyleSheet,
+    TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/navigationType';
-import { useUser } from '../context/userContext';
-import API from '../services/api';
+import { RootStackParamList } from '../../navigation/navigationType';
+import API from '../../services/api';
 import { AxiosError } from 'axios';
-import Header from './Header';
-import Footer from './Footer';
 
 const CreateAdventureForm = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -25,20 +22,14 @@ const CreateAdventureForm = () => {
         _id: string;
         title: string;
     }>();
-    const [shouldRedirect, setShouldRedirect] = useState(false);
 
-    const { accessToken } = useUser();
     const handleCreate = async () => {
         try {
             const response = await API.post('/adventures/create', {
-                // headers: {
-                //     Authorization: `Bearer ${accessToken}`,
-                // },
                 title,
                 description,
             });
             setDataAdventure(response.data);
-            setShouldRedirect(true);
         } catch (error) {
             if (error instanceof AxiosError) {
                 // Ici, on sait que c'est une erreur Axios et qu'elle a une réponse
@@ -55,44 +46,69 @@ const CreateAdventureForm = () => {
 
     useEffect(() => {
         if (dataAdventure?.title)
-            navigation.navigate('Adventure', {
+            navigation.navigate('AdventureMaster', {
                 idAdventure: dataAdventure._id,
             });
-    }, [shouldRedirect]);
+    }, [dataAdventure]);
     return (
-        <SafeAreaView style={styles.container}>
-            <Header context="return" />
-            <View style={styles.content}>
-                <Text>Création d'une nouvelle aventure</Text>
-                <TextInput
-                    placeholder="Titre"
-                    value={title}
-                    onChangeText={setTitle}
+        <View style={styles.content}>
+            <Text style={styles.title}>Création d'une nouvelle aventure</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Titre"
+                value={title}
+                onChangeText={setTitle}
+            />
+            <TextInput
+                style={[styles.input, styles.descriptionInput]}
+                multiline
+                numberOfLines={6}
+                onChangeText={setDescription}
+                value={description}
+                placeholder="Description de cette aventure"
+            />
+            <View style={styles.buttonContainer}>
+                <Button
+                    title="Créer l'aventure"
+                    onPress={handleCreate}
+                    color="#591802"
                 />
-                <TextInput
-                    multiline
-                    numberOfLines={6}
-                    onChangeText={setDescription}
-                    value={description}
-                    placeholder="Description de cette aventure"
-                />
-                <View>
-                    <Button title="Créer l'aventure" onPress={handleCreate} />
-                </View>
             </View>
-            <Footer context="home" currentPage="home" />
-        </SafeAreaView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f5f5f5',
-    },
     content: {
         flex: 1,
-        padding: 16,
+        padding: 24,
+        alignItems: 'center',
+        backgroundColor: '#f5f5f5',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 20,
+    },
+    input: {
+        width: '100%',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 20,
+        backgroundColor: '#fff',
+        fontSize: 16,
+    },
+    descriptionInput: {
+        height: 150,
+        textAlignVertical: 'top',
+    },
+    buttonContainer: {
+        width: '100%',
+        borderRadius: 8,
+        overflow: 'hidden',
     },
 });
 

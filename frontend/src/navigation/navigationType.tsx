@@ -2,6 +2,7 @@ export type RootStackParamList = {
     Login: undefined;
     Register: undefined;
     Home: undefined;
-    Adventure: { idAdventure: string };
-    CreateAdventure: undefined;
+    AdventureMaster: { idAdventure: string };
+    AdventurePlayer: { idAdventure: string };
+    NewAdventure: { mode: string } | undefined;
 };

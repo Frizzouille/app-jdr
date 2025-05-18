@@ -24,8 +24,6 @@ export class UserController {
     constructor(
         private readonly userService: UserService,
         private readonly authService: AuthService,
-        private readonly adventureService: AdventureService,
-        private readonly InvitationService: InvitationService,
     ) {}
     // localhost:3000/users
 
@@ -53,19 +51,5 @@ export class UserController {
             password: createDto.password,
             email: createDto.email,
         });
-    }
-
-    @Get(':id/adventures')
-    @HttpCode(HttpStatus.OK)
-    async getAdventuresByUserId(@Param('id') id: string) {
-        return await this.adventureService.getAdventuresByUserId(
-            new Types.ObjectId(id),
-        );
-    }
-
-    @Get(':id/adventuresInvitations')
-    @HttpCode(HttpStatus.OK)
-    async getAdventuresInvitationByUserId(@Param('id') id: string) {
-        return await this.InvitationService.getAdventuresInvitationByUserId(id);
     }
 }

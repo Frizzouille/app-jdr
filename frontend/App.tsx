@@ -8,11 +8,12 @@ import { RootStackParamList } from './src/navigation/navigationType';
 import { navigationRef } from './src/navigation/navigationRef'; // adapte le chemin
 
 // Page
-import LoginS from './src/pages/login/LoginScreen';
-import RegisterS from './src/pages/login/RegisterScreen';
-import HomeS from './src/pages/HomeScreen';
-import AdventureS from './src/pages/adventures/AdventureScreen';
-import CreateAdventure from './src/components/CreateAdventureForm';
+import LoginS from './src/pages/login/Login';
+import RegisterS from './src/pages/login/Register';
+import HomeS from './src/pages/Home';
+import AdventureM from './src/pages/adventures/AdventureMaster';
+import AdventureP from './src/pages/adventures/AdventurePlayer';
+import NewAdventure from './src/pages/adventures/NewAdventures';
 
 // Contexte
 import { UserProvider, useUser } from './src/context/userContext';
@@ -45,10 +46,17 @@ function AppNavigation() {
                     <Stack.Screen name="Home" component={HomeS} />
                     <Stack.Screen name="Login" component={LoginS} />
                     <Stack.Screen name="Register" component={RegisterS} />
-                    <Stack.Screen name="Adventure" component={AdventureS} />
                     <Stack.Screen
-                        name="CreateAdventure"
-                        component={CreateAdventure}
+                        name="AdventureMaster"
+                        component={AdventureM}
+                    />
+                    <Stack.Screen
+                        name="AdventurePlayer"
+                        component={AdventureP}
+                    />
+                    <Stack.Screen
+                        name="NewAdventure"
+                        component={NewAdventure}
                     />
                 </Stack.Navigator>
             </View>
