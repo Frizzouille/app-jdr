@@ -1,8 +1,9 @@
 // src/pages/RegisterScreen.tsx
 import { useEffect, useState } from 'react';
-import { View, TextInput, Button, Text } from 'react-native';
+import { View, TextInput, Button, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+
 
 // API
 import axios from 'axios';
@@ -13,7 +14,8 @@ import { RootStackParamList } from '../../navigation/navigationType';
 
 // Style
 import { loginStyle } from '../../styles/loginScreen.styles';
-import { cardStyle } from '../../styles/card.styles';
+import { colors } from '../../styles/colors';
+
 
 // Context
 import { useUser } from '../../context/userContext';
@@ -77,40 +79,46 @@ export default function RegisterScreen() {
     };
 
     return (
-        <View style={cardStyle.container}>
-            <View style={cardStyle.card}>
-                <Text style={loginStyle.title}>Créer un compte</Text>
+        <View style={{flex: 1, backgroundColor: colors.light}}>
+            <View style={loginStyle.container}>
+                <View style={loginStyle.card}>
+                    <Text style={loginStyle.title}>Créer un compte</Text>
 
-                <TextInput
-                    style={loginStyle.input}
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={setEmail}
-                />
-                <TextInput
-                    style={loginStyle.input}
-                    placeholder="Mot de passe"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                />
-                <TextInput
-                    style={loginStyle.input}
-                    placeholder="Confirmer le mot de passe"
-                    value={confirmedPassword}
-                    onChangeText={setConfirmedPassword}
-                    secureTextEntry
-                />
-                {Array.isArray(errorMessage) && errorMessage.length > 0 && (
-                    <>
-                        {errorMessage.map((element, index) => (
-                            <Text key={index} style={loginStyle.error}>
-                                {element}
-                            </Text>
-                        ))}
-                    </>
-                )}
-                <Button title="Créer le compte" onPress={handleRegister} />
+                    <TextInput
+                        style={loginStyle.input}
+                        placeholder="Email"
+                        value={email}
+                        onChangeText={setEmail}
+                    />
+                    <TextInput
+                        style={loginStyle.input}
+                        placeholder="Mot de passe"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                    />
+                    <TextInput
+                        style={loginStyle.input}
+                        placeholder="Confirmer le mot de passe"
+                        value={confirmedPassword}
+                        onChangeText={setConfirmedPassword}
+                        secureTextEntry
+                    />
+                    <View style={{marginBottom: 10}}>
+                        {Array.isArray(errorMessage) && errorMessage.length > 0 && (
+                            <>
+                                {errorMessage.map((element, index) => (
+                                    <Text key={index} style={loginStyle.error}>
+                                        {element}
+                                    </Text>
+                                ))}
+                            </>
+                        )}
+                    </View>
+                    <TouchableOpacity style={[loginStyle.loginButton,{width: '100%'}]} onPress={handleRegister}>
+                        <Text style={loginStyle.buttonText}>Log in</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );

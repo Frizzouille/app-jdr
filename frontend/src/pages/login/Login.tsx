@@ -5,9 +5,9 @@ import {
     Text,
     TextInput,
     Image,
-    Button,
     //@ts-ignore Ajouter pour désactiver une erreur dans vscode
     CheckBox,
+    TouchableOpacity,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
@@ -21,7 +21,8 @@ import { RootStackParamList } from '../../navigation/navigationType';
 
 // Style
 import { loginStyle } from '../../styles/loginScreen.styles';
-import { cardStyle } from '../../styles/card.styles';
+import { colors } from '../../styles/colors';
+
 
 // Contexte
 import { useUser } from '../../context/userContext';
@@ -68,46 +69,51 @@ const LoginScreen = () => {
     };
 
     return (
-        <View style={cardStyle.container}>
-            <View style={cardStyle.card}>
-                <Image 
-                    source={require('../../img/logoTemp.png')} 
-                    style={loginStyle.logo}
-                    resizeMode="contain" 
-                />
-                <Text style={loginStyle.title}>Connexion</Text>
-                <TextInput
-                    style={loginStyle.input}
-                    placeholder="Email"
-                    onChangeText={setEmail}
-                    value={email}
-                />
+        <View style={{flex: 1, backgroundColor: colors.light}}>
+            <View style={loginStyle.container}>
+                <View style={loginStyle.card}>
+                    <Image 
+                        source={require('../../img/logoTemp.png')} 
+                        style={loginStyle.logo}
+                        resizeMode="contain" 
+                    />
+                    <Text style={loginStyle.title}>Connexion</Text>
+                    <TextInput
+                        style={loginStyle.input}
+                        placeholder="Email"
+                        onChangeText={setEmail}
+                        value={email}
+                    />
 
-                <TextInput
-                    style={loginStyle.input}
-                    placeholder="Password"
-                    secureTextEntry
-                    onChangeText={setPassword}
-                    value={password}
-                />
-                <View style={loginStyle.checkboxContainer}>
-                    <CheckBox
-                        value={rememberMe}
-                        onValueChange={setRememberMe}
+                    <TextInput
+                        style={loginStyle.input}
+                        placeholder="Password"
+                        secureTextEntry
+                        onChangeText={setPassword}
+                        value={password}
                     />
-                    <Text style={loginStyle.checkboxLabel}>
-                        Keep me logged in.
-                    </Text>
-                </View>
-                <View style={loginStyle.button}>
-                    <Button title="Log inreg" onPress={handleLogin} />
-                </View>
-                <View style={loginStyle.button}>
-                    <Button
-                        title="Register"
+                    <View style={loginStyle.checkboxContainer}>
+                        <CheckBox
+                            value={rememberMe}
+                            onValueChange={setRememberMe}
+                        />
+                        <Text style={loginStyle.checkboxLabel}>
+                            Keep me logged in.
+                        </Text>
+                    </View>
+
+                    <View style={loginStyle.buttonContainer}>
+                        <TouchableOpacity
+                        style={loginStyle.registerButton}
                         onPress={() => navigation.navigate('Register')}
-                        color="#00a35c"
-                    />
+                        >
+                        <Text style={[loginStyle.buttonText, { color: 'white' }]}>Register</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={loginStyle.loginButton} onPress={handleLogin}>
+                        <Text style={loginStyle.buttonText}>Log in</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         </View>

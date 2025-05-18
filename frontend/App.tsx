@@ -37,7 +37,6 @@ function AppNavigation() {
     }
     return (
         <NavigationContainer ref={navigationRef}>
-            <View style={{ flex: 1, backgroundColor: '#000000' }}>
                 <Stack.Navigator
                     screenOptions={{ headerShown: false }}
                     initialRouteName={dataUser ? 'Home' : 'Login'}
@@ -58,7 +57,6 @@ function AppNavigation() {
                         component={NewAdventure}
                     />
                 </Stack.Navigator>
-            </View>
         </NavigationContainer>
     );
 }
