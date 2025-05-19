@@ -3,6 +3,8 @@ import { ScrollView } from 'react-native';
 import CharacterCreationNavigation from '../Adventure/CharacterCreationNavigation';
 import RaceStep from './RaceStep';
 import StatsStep from './StatsStep';
+import Backstory from './BackstoryStep';
+import BackstoryStep from './BackstoryStep';
 
 export type CharacterFormData = {
     name: string;
@@ -30,6 +32,8 @@ export default function CharacterCreationScreen() {
     return (
         <ScrollView
             contentContainerStyle={{
+                flex: 1,
+                justifyContent: 'space-between',
                 paddingVertical: 6,
                 paddingHorizontal: 16,
             }}
@@ -51,6 +55,17 @@ export default function CharacterCreationScreen() {
                     }
                 />
             )}
+            {step === 2 && (
+                <BackstoryStep
+                    backstory={characterData.backstory}
+                    onUpdate={(updatedBackstory: string) =>
+                        updateCharacter({
+                            ...characterData,
+                            backstory: updatedBackstory,
+                        })
+                    }
+                />
+            )}
             <CharacterCreationNavigation
                 onPrevious={() => {
                     setStep(step - 1);
@@ -58,7 +73,7 @@ export default function CharacterCreationScreen() {
                 onNext={() => {
                     setStep(step + 1);
                 }}
-                isPreviousDisabled={true}
+                isPreviousDisabled={step === 0}
                 isNextDisabled={
                     !characterData.race ||
                     !characterData.classes ||

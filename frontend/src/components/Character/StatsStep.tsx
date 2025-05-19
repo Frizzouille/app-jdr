@@ -90,7 +90,7 @@ export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
     };
 
     return (
-        <View>
+        <>
             <View>
                 <Text style={[styles.label, { fontWeight: 'bold' }]}>
                     Niveau: 1
@@ -100,9 +100,7 @@ export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
                 <Text style={[styles.label, { fontWeight: 'bold' }]}>
                     Caractéristique
                 </Text>
-                <View /> {/* Placeholder pour alignement bouton - */}
                 <Text style={[styles.value, { fontWeight: 'bold' }]}>Base</Text>
-                <View /> {/* Placeholder pour alignement bouton + */}
                 <Text style={[styles.final, { fontWeight: 'bold' }]}>
                     Valeur finale
                 </Text>
@@ -141,7 +139,6 @@ export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
                         <Text>+</Text>
                     </TouchableOpacity>
 
-                    {/* Colonne Valeur finale */}
                     <Text style={{ width: 100, textAlign: 'center' }}>
                         {getFinalValue(stat)}
                     </Text>
@@ -152,7 +149,7 @@ export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
                     Nombre de points restants: {creditPoint} / {maxCreditPoint}
                 </Text>
             </View>
-        </View>
+        </>
     );
 }
 
