@@ -9,9 +9,9 @@ import {
 
 type Props = {
     title: string;
-    items: string[];
+    items: { [key: string]: string }; // clé: id, valeur: nom
     selected: string | null;
-    onSelect: (item: string) => void;
+    onSelect: (itemKey: string) => void;
 };
 
 export default function SelectableGrid({
@@ -20,23 +20,25 @@ export default function SelectableGrid({
     selected,
     onSelect,
 }: Props) {
+    const itemEntries = Object.entries(items); // [['highElf', 'Haut-Elfe'], ...]
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{title}</Text>
             <FlatList
-                data={items}
+                data={itemEntries}
                 numColumns={4}
-                keyExtractor={(item) => item}
+                keyExtractor={([key]) => key}
                 contentContainerStyle={styles.list}
-                renderItem={({ item }) => {
-                    const isSelected = selected === item;
+                renderItem={({ item: [key, label] }) => {
+                    const isSelected = selected === key;
                     return (
                         <TouchableOpacity
                             style={[
                                 styles.button,
                                 isSelected && styles.selectedButton,
                             ]}
-                            onPress={() => onSelect(item)}
+                            onPress={() => onSelect(key)}
                         >
                             <Text
                                 style={[
@@ -44,7 +46,7 @@ export default function SelectableGrid({
                                     isSelected && styles.selectedText,
                                 ]}
                             >
-                                {item}
+                                {label}
                             </Text>
                         </TouchableOpacity>
                     );

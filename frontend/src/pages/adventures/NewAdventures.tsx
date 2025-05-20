@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import {
     View,
-    Button,
     SafeAreaView,
     StyleSheet,
     TouchableOpacity,

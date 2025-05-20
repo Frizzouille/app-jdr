@@ -21,38 +21,34 @@ const AdventurePlayer = () => {
     const [dataAdventure, setDataAdventure] = useState<{ title: string }>({
         title: '',
     });
-    const [characters, setCharacters] = useState<{}[]>(new Array());
-
+    const [characters, setCharacters] = useState<{}>(new Array());
     const { idAdventure } = route.params;
 
     useEffect(() => {
-        async function getAdventuresById() {
-            try {
-                const response = await API.get('/adventures/' + idAdventure);
-
-                setDataAdventure(response.data.adventure);
-                setCharacters(response.data.characters);
-
-                setIsLoading(false);
-            } catch (error) {
-                if (error instanceof AxiosError) {
-                    // Ici, on sait que c'est une erreur Axios et qu'elle a une réponse
-                    console.error(
-                        '❌ Erreur de connexion :',
-                        error.response?.data || error.message,
-                    );
-                } else {
-                    // En cas d'autres erreurs imprévues
-                    console.error(
-                        '❌ Une erreur inconnue est survenue :',
-                        error,
-                    );
-                }
-            }
-        }
         getAdventuresById();
     }, []);
 
+    const getAdventuresById = async () => {
+        try {
+            const response = await API.get('/adventures/' + idAdventure);
+
+            setDataAdventure(response.data.adventure);
+            setCharacters(response.data.character);
+
+            setIsLoading(false);
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                // Ici, on sait que c'est une erreur Axios et qu'elle a une réponse
+                console.error(
+                    '❌ Erreur de connexion :',
+                    error.response?.data || error.message,
+                );
+            } else {
+                // En cas d'autres erreurs imprévues
+                console.error('❌ Une erreur inconnue est survenue :', error);
+            }
+        }
+    };
     if (isLoading) {
         return (
             <SafeAreaView style={styles.container}>
@@ -78,12 +74,15 @@ const AdventurePlayer = () => {
         ...useHeaderPresets('adventures'),
         title: dataAdventure.title,
     };
-    if (!characters || characters.length === 0) {
+    if (!characters) {
         return (
             <SafeAreaView style={styles.container}>
                 <Header {...headerProp} />
                 <View style={styles.content}>
-                    <CreateCharacterForm />
+                    <CreateCharacterForm
+                        adventureId={idAdventure}
+                        onCharacterCreated={setCharacters}
+                    />
                 </View>
                 <Footer {...useFooterPresets('adventures')} />
             </SafeAreaView>

@@ -5,11 +5,13 @@ const CharacterCreationNavigation = ({
     onNext,
     isPreviousDisabled,
     isNextDisabled,
+    nextTest,
 }: {
     onPrevious: () => void;
     onNext: () => void;
     isPreviousDisabled: boolean;
     isNextDisabled: boolean;
+    nextTest: string;
 }) => {
     return (
         <View
@@ -53,7 +55,7 @@ const CharacterCreationNavigation = ({
                         color: isNextDisabled ? '#888' : '#fff',
                     }}
                 >
-                    Suivant
+                    {nextTest}
                 </Text>
             </TouchableOpacity>
         </View>

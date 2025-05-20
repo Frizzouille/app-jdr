@@ -59,7 +59,7 @@ export class AdventureController {
             new Types.ObjectId(id),
         );
         const character =
-            await this.characterService.getCharactersByUserAndAdventure(
+            await this.characterService.getCharacterByUserAndAdventure(
                 new Types.ObjectId(userId),
                 new Types.ObjectId(id),
             );
@@ -107,7 +107,7 @@ export class AdventureController {
         @Body() post: { adventureId: string },
     ) {
         const userId = req.user.userId;
-        return await this.characterService.getCharactersByUserAndAdventure(
+        return await this.characterService.getCharacterByUserAndAdventure(
             new Types.ObjectId(userId),
             new Types.ObjectId(post.adventureId),
         );

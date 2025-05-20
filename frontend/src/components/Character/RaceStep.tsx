@@ -1,54 +1,55 @@
 import SelectableGrid from './SelectableGrid';
 import { CharacterFormData } from './CreateCharacterForm';
-const races = [
-    'Haut-Elfe',
-    'Elfe des bois',
-    'Elfe noir',
-    'Halfelin piel-léger',
-    'Halfelin robuste',
-    'Humain',
-    'Nain des collines',
-    'Nain des montagnes',
-    'Demi-elfe',
-    'Demi-orc',
-    'Drakéide',
-    'Gnome des forêts',
-    'Gnome des roches',
-    'Tieffelin',
-];
 
-const classes = [
-    'Barbare',
-    'Barde',
-    'Clerc',
-    'Druide',
-    'Guerrier',
-    'Moine',
-    'Paladin',
-    'Rôdeur',
-    'Roublard',
-    'Magicien',
-    'Ensorceleur',
-    'Occultiste',
-];
+const races = {
+    highElf: 'Haut-Elfe',
+    woodElf: 'Elfe des bois',
+    darkElf: 'Elfe noir',
+    lightfootHalfling: 'Halfelin piel-léger',
+    stoutHalfling: 'Halfelin robuste',
+    human: 'Humain',
+    hillDwarf: 'Nain des collines',
+    mountainDwarf: 'Nain des montagnes',
+    halfElf: 'Demi-elfe',
+    halfOrc: 'Demi-orc',
+    dragonborn: 'Drakéide',
+    forestGnome: 'Gnome des forêts',
+    rockGnome: 'Gnome des roches',
+    tiefling: 'Tieffelin',
+};
 
-const background = [
-    'Acolyte',
-    'Artisan de guilde',
-    'Artiste',
-    'Charlatan',
-    'Chevalier',
-    'Criminel',
-    'Enfant des rues',
-    'Ermite',
-    'Héros du peuple',
-    'Marin',
-    'Noble',
-    'Pirate',
-    'Sage',
-    'Sauvageon',
-    'Soldat',
-];
+const classes = {
+    barbarian: 'Barbare',
+    bard: 'Barde',
+    cleric: 'Clerc',
+    druid: 'Druide',
+    fighter: 'Guerrier',
+    monk: 'Moine',
+    paladin: 'Paladin',
+    ranger: 'Rôdeur',
+    rogue: 'Roublard',
+    wizard: 'Magicien',
+    sorcerer: 'Ensorceleur',
+    warlock: 'Occultiste',
+};
+
+const backgrounds = {
+    acolyte: 'Acolyte',
+    guildArtisan: 'Artisan de guilde',
+    entertainer: 'Artiste',
+    charlatan: 'Charlatan',
+    knight: 'Chevalier',
+    criminal: 'Criminel',
+    urchin: 'Enfant des rues',
+    hermit: 'Ermite',
+    folkHero: 'Héros du peuple',
+    sailor: 'Marin',
+    noble: 'Noble',
+    pirate: 'Pirate',
+    sage: 'Sage',
+    outlander: 'Sauvageon',
+    soldier: 'Soldat',
+};
 
 type RaceStepProps = {
     dataCharacter: Partial<CharacterFormData>;
@@ -65,7 +66,7 @@ export default function RaceStep({
                 title="Race"
                 items={races}
                 selected={dataCharacter.race || null}
-                onSelect={(race) => updateCharacter({ race })}
+                onSelect={(key) => updateCharacter({ race: key })}
             />
             <SelectableGrid
                 title="Classe"
@@ -77,9 +78,9 @@ export default function RaceStep({
             />
             <SelectableGrid
                 title="Historique"
-                items={background}
+                items={backgrounds}
                 selected={dataCharacter.background || null}
-                onSelect={(background) => updateCharacter({ background })}
+                onSelect={(key) => updateCharacter({ background: key })}
             />
         </>
     );

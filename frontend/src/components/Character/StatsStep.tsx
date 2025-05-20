@@ -7,30 +7,22 @@ import {
     StyleSheet,
 } from 'react-native';
 
-const statsList = [
-    'Strength',
-    'Dexterity',
-    'Constitution',
-    'Intelligence',
-    'Wisdom',
-    'Charisma',
-];
-
-const bonus = {
-    Strength: 1,
-    Dexterity: 0,
-    Constitution: 2,
-    Intelligence: 0,
-    Wisdom: 0,
-    Charisma: -1,
+const statsList = {
+    strength: 'Force',
+    dexterity: 'Dextérité',
+    constitution: 'Constitution',
+    intelligence: 'Intelligence',
+    wisdom: 'Sagesse',
+    charisma: 'Charisme',
 };
 
 type StatsStepProps = {
     stats: { [key: string]: number };
+    bonus: { [key: string]: number };
     onUpdate: (updatedStats: { [key: string]: number }) => void;
 };
 
-export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
+export default function StatsStep({ stats, bonus, onUpdate }: StatsStepProps) {
     const maxCreditPoint = 27;
     const [creditPoint, setCreditPoint] = useState(maxCreditPoint);
     const [repartitionPoint, setRepartitionPoint] = useState<{
@@ -40,33 +32,37 @@ export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
     // Initialiser les propriétés manquantes à 10
     useEffect(() => {
         let newRepartitionPoint = repartitionPoint;
-        for (const stat of statsList) {
+        for (const stat of Object.keys(statsList)) {
             if (!(stat in stats)) {
-                stats[stat] = 10;
-            }
-            newRepartitionPoint[stat] = stats[stat];
+                newRepartitionPoint[stat] = 10;
+            } else newRepartitionPoint[stat] = stats[stat];
         }
-
         setRepartitionPoint(newRepartitionPoint);
-    }, []);
+    });
 
     useEffect(() => {
         let somme = 0;
 
         for (const key in repartitionPoint) {
             const value = repartitionPoint[key];
-            if (value > 8) somme += value - 8;
+            if (value > 8 && value <= 13) {
+                somme += value - 8;
+            } else if (value > 13) {
+                somme += 2 * (value - 13) + 5; // Compte deux points pour chaque valeur > 13 puis 5 pour 9 - 10 - 11 - 12 - 13
+            }
         }
 
         setCreditPoint(maxCreditPoint - somme);
     }, [repartitionPoint]);
 
     const handleChange = (key: string, delta: number) => {
-        if (!stats) return; // Ne rien faire si stats est undefined
+        if (!repartitionPoint) return; // Ne rien faire si repartitionPoint est undefined
 
         let val = null;
-        if (stats[key] === 15 && delta === 1) val = 15;
-        else val = Math.max(0, (!stats ? 10 : stats[key]) + delta);
+        val = Math.max(
+            0,
+            (!repartitionPoint ? 10 : repartitionPoint[key]) + delta,
+        );
 
         const newRepartitionPoint = {
             ...repartitionPoint,
@@ -75,18 +71,21 @@ export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
         setRepartitionPoint(newRepartitionPoint);
 
         onUpdate({
-            ...stats,
+            ...newRepartitionPoint,
             [key]: val,
         });
     };
 
     // Calcule la valeur finale et le modificateur
     const getFinalValue = (stat: string) => {
-        const statValue = stats[stat] || 10;
+        const statValue = repartitionPoint[stat] || 10;
         const statBonus = stat in bonus ? bonus[stat as keyof typeof bonus] : 0;
+        const bonusTest = statBonus
+            ? (statBonus > 0 ? '+' : '-') + statBonus
+            : '';
         const finalValue = statValue + statBonus;
         const modifier = Math.floor((finalValue - 10) / 2); // Calcul du modificateur
-        return `${finalValue} (${modifier})`;
+        return `${statValue}${bonusTest} (${modifier})`;
     };
 
     return (
@@ -105,19 +104,19 @@ export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
                     Valeur finale
                 </Text>
             </View>
-            {statsList.map((stat) => (
+            {Object.entries(statsList).map((stat) => (
                 <View
-                    key={stat}
+                    key={stat[0]}
                     style={{
                         flexDirection: 'row',
                         alignItems: 'center',
                         marginVertical: 8,
                     }}
                 >
-                    <Text style={{ width: 100 }}>{stat}</Text>
+                    <Text style={{ width: 100 }}>{stat[1]}</Text>
 
                     <TouchableOpacity
-                        onPress={() => handleChange(stat, -1)}
+                        onPress={() => handleChange(stat[0], -1)}
                         style={styles.button}
                     >
                         <Text>-</Text>
@@ -126,21 +125,31 @@ export default function StatsStep({ stats, onUpdate }: StatsStepProps) {
                     <TextInput
                         style={styles.input}
                         keyboardType="numeric"
-                        value={String(!stats ? 10 : stats[stat])}
-                        onChangeText={(text) =>
-                            onUpdate({ ...stats, [stat]: parseInt(text) || 0 })
-                        }
+                        value={String(
+                            !repartitionPoint ? 10 : repartitionPoint[stat[0]],
+                        )}
+                        onChangeText={(text) => {
+                            let val = parseInt(text);
+                            setRepartitionPoint({
+                                ...repartitionPoint,
+                                [stat[0]]: val,
+                            });
+                            onUpdate({
+                                ...repartitionPoint,
+                                [stat[0]]: val || 0,
+                            });
+                        }}
                     />
 
                     <TouchableOpacity
-                        onPress={() => handleChange(stat, 1)}
+                        onPress={() => handleChange(stat[0], 1)}
                         style={styles.button}
                     >
                         <Text>+</Text>
                     </TouchableOpacity>
 
                     <Text style={{ width: 100, textAlign: 'center' }}>
-                        {getFinalValue(stat)}
+                        {getFinalValue(stat[0])}
                     </Text>
                 </View>
             ))}
