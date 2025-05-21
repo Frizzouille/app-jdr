@@ -35,14 +35,13 @@ interface Adventure {
 
 // --- Home Screen Component ---
 const HomeScreen = () => {
-    // Assuming accessToken is provided by useUser context
-    const { accessToken, logoutUser } = useUser();
+    const { dataUser, logoutUser } = useUser();
     const [adventures, setAdventures] = useState<Adventure[]>([]);
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     useEffect(() => {
         const fetchAdventures = async () => {
-            if (!accessToken) {
+            if (!dataUser || !dataUser.accessToken) {
                 logoutUser();
                 return;
             }

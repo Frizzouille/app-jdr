@@ -23,7 +23,6 @@ import { RootStackParamList } from '../../navigation/navigationType';
 import { loginStyle } from '../../styles/loginScreen.styles';
 import { colors } from '../../styles/colors';
 
-
 // Contexte
 import { useUser } from '../../context/userContext';
 
@@ -35,12 +34,6 @@ const LoginScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
-    const [shouldRedirect, setShouldRedirect] = useState(false);
-
-    // Utilisation d'un useEffect car je mets a jour dataUser via un useState (asynchrone)
-    useEffect(() => {
-        if (dataUser?.id && dataUser?.email) navigation.navigate('Home');
-    }, [shouldRedirect]);
 
     const handleLogin = async () => {
         try {
@@ -52,8 +45,13 @@ const LoginScreen = () => {
 
             if (rememberMe) localStorage.setItem('accessToken', accessToken);
 
-            setDataUser({ id: response.data.id, email: response.data.email });
-            setShouldRedirect(true);
+            if (response.data.id) {
+                setDataUser({
+                    id: response.data.id,
+                    email: response.data.email,
+                    accessToken: accessToken,
+                });
+            }
         } catch (error) {
             if (error instanceof AxiosError) {
                 // Ici, on sait que c'est une erreur Axios et qu'elle a une réponse
@@ -68,14 +66,20 @@ const LoginScreen = () => {
         }
     };
 
+    // Rediriger après la mise à jour de dataUser
+    useEffect(() => {
+        if (dataUser?.id) {
+            navigation.navigate('Home');
+        }
+    }, [dataUser]);
     return (
-        <View style={{flex: 1, backgroundColor: colors.light}}>
+        <View style={{ flex: 1, backgroundColor: colors.light }}>
             <View style={loginStyle.container}>
                 <View style={loginStyle.card}>
-                    <Image 
-                        source={require('../../img/logoTemp.png')} 
+                    <Image
+                        source={require('../../img/logoTemp.png')}
                         style={loginStyle.logo}
-                        resizeMode="contain" 
+                        resizeMode="contain"
                     />
                     <Text style={loginStyle.title}>Connexion</Text>
                     <TextInput
@@ -104,14 +108,24 @@ const LoginScreen = () => {
 
                     <View style={loginStyle.buttonContainer}>
                         <TouchableOpacity
-                        style={loginStyle.registerButton}
-                        onPress={() => navigation.navigate('Register')}
+                            style={loginStyle.registerButton}
+                            onPress={() => navigation.navigate('Register')}
                         >
-                        <Text style={[loginStyle.buttonText, { color: 'white' }]}>Register</Text>
+                            <Text
+                                style={[
+                                    loginStyle.buttonText,
+                                    { color: 'white' },
+                                ]}
+                            >
+                                Register
+                            </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={loginStyle.loginButton} onPress={handleLogin}>
-                        <Text style={loginStyle.buttonText}>Log in</Text>
+                        <TouchableOpacity
+                            style={loginStyle.loginButton}
+                            onPress={handleLogin}
+                        >
+                            <Text style={loginStyle.buttonText}>Log in</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

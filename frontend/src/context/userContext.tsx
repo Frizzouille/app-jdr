@@ -10,11 +10,11 @@ type User = {
     firstname?: string | undefined;
     surname?: string | undefined;
     avatarUrl?: string | undefined;
+    accessToken?: string | undefined;
 };
 
 type UserContextType = {
     dataUser: User | null;
-    accessToken: string | undefined;
     isLoading: boolean;
     setDataUser: (user: User | null) => void;
     logoutUser: () => void;
@@ -23,21 +23,22 @@ type UserContextType = {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-    const accessToken = localStorage.getItem('accessToken') ?? undefined;
-
     const [dataUser, setDataUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
+    const accessToken =
+        localStorage.getItem('accessToken') ?? dataUser?.accessToken;
+
+    if (accessToken)
+        API.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
     useEffect(() => {
         if (!accessToken) return;
         setIsLoading(true);
 
-        API.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
-
         const getUser = async () => {
             try {
                 const response = await API.get('/auth');
-                setDataUser(response.data);
+                setDataUser({ ...response.data, accessToken: accessToken });
             } catch (error) {
                 localStorage.removeItem('accessToken');
                 setDataUser(null);
@@ -59,7 +60,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             value={{
                 dataUser,
                 setDataUser,
-                accessToken,
                 isLoading,
                 logoutUser,
             }}

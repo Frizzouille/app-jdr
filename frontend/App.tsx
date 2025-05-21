@@ -37,26 +37,17 @@ function AppNavigation() {
     }
     return (
         <NavigationContainer ref={navigationRef}>
-                <Stack.Navigator
-                    screenOptions={{ headerShown: false }}
-                    initialRouteName={dataUser ? 'Home' : 'Login'}
-                >
-                    <Stack.Screen name="Home" component={HomeS} />
-                    <Stack.Screen name="Login" component={LoginS} />
-                    <Stack.Screen name="Register" component={RegisterS} />
-                    <Stack.Screen
-                        name="AdventureMaster"
-                        component={AdventureM}
-                    />
-                    <Stack.Screen
-                        name="AdventurePlayer"
-                        component={AdventureP}
-                    />
-                    <Stack.Screen
-                        name="NewAdventure"
-                        component={NewAdventure}
-                    />
-                </Stack.Navigator>
+            <Stack.Navigator
+                screenOptions={{ headerShown: false }}
+                initialRouteName={dataUser ? 'Home' : 'Login'}
+            >
+                <Stack.Screen name="Home" component={HomeS} />
+                <Stack.Screen name="Login" component={LoginS} />
+                <Stack.Screen name="Register" component={RegisterS} />
+                <Stack.Screen name="AdventureMaster" component={AdventureM} />
+                <Stack.Screen name="AdventurePlayer" component={AdventureP} />
+                <Stack.Screen name="NewAdventure" component={NewAdventure} />
+            </Stack.Navigator>
         </NavigationContainer>
     );
 }
