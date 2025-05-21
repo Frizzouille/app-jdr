@@ -36,6 +36,9 @@ export class Character {
     @Prop({ required: true })
     background: string; // Historique
 
+    @Prop()
+    backstory: string;
+
     @Prop({ type: Object, required: true })
     stats: {
         strength: number;
@@ -46,8 +49,27 @@ export class Character {
         charisma: number;
     };
 
-    @Prop()
-    backstory: string;
+    @Prop({ type: Object, required: true })
+    life: {
+        max: number;
+        current: number;
+        bonus: Object;
+    };
+
+    @Prop({ type: Array, required: true })
+    skills: [];
+
+    @Prop({ type: Array, required: true })
+    features: [];
+
+    @Prop({ type: Object })
+    spells: {
+        cantrips: {};
+        known: {};
+    };
+
+    @Prop({ type: Array, required: true })
+    langages: [];
 }
 
 export const CharacterSchema = SchemaFactory.createForClass(Character);

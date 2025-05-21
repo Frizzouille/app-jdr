@@ -56,11 +56,32 @@ export class CreateCharacterDto {
     @IsNotEmpty()
     background: string;
 
-    @ValidateNested()
-    @Type(() => StatsDto)
-    stats: { base: StatsDto; bonus: {} };
-
     @IsString()
     @IsOptional()
     backstory?: string;
+
+    @ValidateNested()
+    stats: { base: StatsDto; bonus: {} };
+
+    @ValidateNested()
+    life: {
+        max: number;
+        current: number;
+        bonus: Object;
+    };
+
+    @IsArray()
+    skills: [];
+
+    @IsArray()
+    features: [];
+
+    @ValidateNested()
+    spells: {
+        cantrips: {};
+        known: {};
+    };
+
+    @IsArray()
+    langages: [];
 }

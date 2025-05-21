@@ -12,7 +12,8 @@ import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { useHeaderPresets } from '../../components/Header/HeaderPresets';
 import { useFooterPresets } from '../../components/Footer/FooterPresets';
-import CreateCharacterForm from '../../components/Character/CreateCharacterForm';
+import CreateCharacterForm from '../../components/Adventure/Character/CreateCharacterForm';
+import Character from '../../components/Adventure/Character/Character';
 
 const AdventurePlayer = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'AdventureMaster'>>();
@@ -21,7 +22,8 @@ const AdventurePlayer = () => {
     const [dataAdventure, setDataAdventure] = useState<{ title: string }>({
         title: '',
     });
-    const [characters, setCharacters] = useState<{}>(new Array());
+    const [contexte, setContexte] = useState<string>('character');
+    const [character, setCharacter] = useState<{}>(new Array());
     const { idAdventure } = route.params;
 
     useEffect(() => {
@@ -33,7 +35,7 @@ const AdventurePlayer = () => {
             const response = await API.get('/adventures/' + idAdventure);
 
             setDataAdventure(response.data.adventure);
-            setCharacters(response.data.character);
+            setCharacter(response.data.character);
 
             setIsLoading(false);
         } catch (error) {
@@ -74,26 +76,24 @@ const AdventurePlayer = () => {
         ...useHeaderPresets('adventures'),
         title: dataAdventure.title,
     };
-    if (!characters) {
-        return (
-            <SafeAreaView style={styles.container}>
-                <Header {...headerProp} />
-                <View style={styles.content}>
-                    <CreateCharacterForm
-                        adventureId={idAdventure}
-                        onCharacterCreated={setCharacters}
-                    />
-                </View>
-                <Footer {...useFooterPresets('adventures')} />
-            </SafeAreaView>
+    let content;
+    if (!character) {
+        content = (
+            <CreateCharacterForm
+                adventureId={idAdventure}
+                onCharacterCreated={setCharacter}
+            />
         );
+    } else if (contexte === 'character') {
+        content = <Character adventure={dataAdventure} character={character} />;
+    } else {
+        content = <Text>Autre contenu par défaut (optionnel)</Text>;
     }
+
     return (
         <SafeAreaView style={styles.container}>
             <Header {...headerProp} />
-            <View style={styles.content}>
-                <Text>Tu es sur la partie {dataAdventure.title}</Text>
-            </View>
+            <View style={styles.content}>{content}</View>
             <Footer {...useFooterPresets('adventures')} />
         </SafeAreaView>
     );

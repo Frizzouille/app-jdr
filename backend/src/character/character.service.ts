@@ -19,39 +19,12 @@ export class CharacterService {
         return this.characterModel.findOne({ userId, adventureId }).exec();
     }
 
-    getBonusForClass(race: string) {
-        const bonus = {
-            highElf: { dexterity: 2, intelligence: 1 },
-            woodElf: { dexterity: 2, wisdom: 1 },
-            darkElf: { dexterity: 2, charisma: 1 },
-            lightfootHalfling: { dexterity: 2, charisma: 1 },
-            stoutHalfling: { dexterity: 2, constitution: 1 },
-            human: {
-                strength: 1,
-                dexterity: 1,
-                constitution: 1,
-                intelligence: 1,
-                wisdom: 1,
-                charisma: 1,
-            },
-            hillDwarf: { constitution: 2, wisdom: 1 },
-            mountainDwarf: { constitution: 2, strength: 2 },
-            halfElf: { charisma: 2, dexterity: 1, wisdom: 1 }, // normalement, au choix
-            halfOrc: { strength: 2, constitution: 1 },
-            dragonborn: { strength: 2, charisma: 1 },
-            forestGnome: { intelligence: 2, dexterity: 1 },
-            rockGnome: { intelligence: 2, constitution: 1 },
-            tiefling: { charisma: 2, intelligence: 1 },
-        };
-        return bonus[race];
-    }
-
     async createCharacter(
         userId: Types.ObjectId,
         adventureId: Types.ObjectId,
         createDto: CreateCharacterDto,
     ): Promise<Character> {
-        const bonusStats = this.getBonusForClass(createDto.race);
+        const bonusStats = this.getBonusForRace(createDto.race);
         let stats = { base: createDto.stats, bonus: bonusStats };
         const newCharacter = new this.characterModel({
             userId,
@@ -80,6 +53,79 @@ export class CharacterService {
                     ? HttpStatus.BAD_REQUEST
                     : HttpStatus.INTERNAL_SERVER_ERROR,
             );
+        }
+    }
+
+    getBonusForRace(race: string) {
+        switch (race) {
+            case 'highElf':
+                return { dexterity: 2, intelligence: 1 };
+            case 'woodElf':
+                return { dexterity: 2, wisdom: 1 };
+            case 'darkElf':
+                return { dexterity: 2, charisma: 1 };
+            case 'lightfootHalfling':
+                return { dexterity: 2, charisma: 1 };
+            case 'stoutHalfling':
+                return { dexterity: 2, constitution: 1 };
+            case 'human':
+                return {
+                    strength: 1,
+                    dexterity: 1,
+                    constitution: 1,
+                    intelligence: 1,
+                    wisdom: 1,
+                    charisma: 1,
+                };
+            case 'hillDwarf':
+                return { constitution: 2, wisdom: 1 };
+            case 'mountainDwarf':
+                return { constitution: 2, strength: 2 };
+            case 'halfElf':
+                return { charisma: 2, dexterity: 1, wisdom: 1 }; // normalement, au choix
+            case 'halfOrc':
+                return { strength: 2, constitution: 1 };
+            case 'dragonborn':
+                return { strength: 2, charisma: 1 };
+            case 'forestGnome':
+                return { intelligence: 2, dexterity: 1 };
+            case 'rockGnome':
+                return { intelligence: 2, constitution: 1 };
+            case 'tiefling':
+                return { charisma: 2, intelligence: 1 };
+            default:
+                return {};
+        }
+    }
+
+    getFeaturesForClass(className: string) {
+        switch (className) {
+            case 'barbarian':
+                return ['Rage', 'Défense sans armure'];
+            case 'bard':
+                return ['Inspiration bardique', 'Lancer de sorts'];
+            case 'cleric':
+                return ['Domaine divin', 'Lancer de sorts'];
+            case 'druid':
+                return ['Langue druidique', 'Lancer de sorts'];
+            case 'fighter':
+                return ['Style de combat', 'Second souffle'];
+            case 'monk':
+                return ['Arts martiaux', 'Défense sans armure'];
+            case 'paladin':
+                return ['Sens divin', 'Imposition des mains'];
+            case 'ranger':
+                return ['Ennemi juré', 'Explorateur naturel'];
+            case 'rogue':
+                return ['Attaque sournoise', 'Expertise'];
+            case 'wizard':
+                return ['Récupération arcanique', 'Lancer de sorts'];
+            case 'sorcerer':
+                return ['Origine magique', 'Lancer de sorts'];
+            case 'warlock':
+                return ['Magie occulte', 'Patron surnaturel'];
+            default:
+                return [];
         }
     }
 }

@@ -22,8 +22,15 @@ export class CharacterController {
     @Get('bonus')
     @HttpCode(HttpStatus.OK)
     async getBonus(@Query('race') race: string) {
-        const bonus = await this.characterService.getBonusForClass(race);
+        const bonus = this.characterService.getBonusForRace(race);
         return { bonus };
+    }
+
+    @Get('features')
+    @HttpCode(HttpStatus.OK)
+    async getFeatures(@Query('class') classe: string) {
+        const features = this.characterService.getFeaturesForClass(classe);
+        return { features };
     }
 
     @UseGuards(JwtAuthGuard)

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
-import CharacterCreationNavigation from '../Adventure/CharacterCreationNavigation';
+import CharacterCreationNavigation from './CharacterCreationNavigation';
 import RaceStep from './RaceStep';
 import StatsStep from './StatsStep';
 import BackstoryStep from './BackstoryStep';
-import API from '../../services/api';
+import API from '../../../services/api';
+import FeatureStep from './FeatureStep';
 
 export type CharacterFormData = {
     adventureId: string;
@@ -31,8 +32,8 @@ export default function CharacterCreationScreen({
     const [characterData, setCharacterData] = useState<
         Partial<CharacterFormData>
     >({});
-
     const [bonusRaces, setBonusRaces] = useState<{ [key: string]: number }>({});
+    const [features, setFeatures] = useState<string[]>([]);
 
     const updateCharacter = (newData: Partial<CharacterFormData>) => {
         setCharacterData((prev) => ({ ...prev, ...newData }));
@@ -45,6 +46,26 @@ export default function CharacterCreationScreen({
             }>(`/characters/bonus?race=${characterData.race}`, {});
 
             setBonusRaces(response.data.bonus);
+        } catch (error) {
+            console.error(
+                '❌ An unknown error occurred while fetching bonus:',
+                error,
+            );
+        }
+    };
+
+    const getFeature = async () => {
+        try {
+            const response = await API.get<{
+                features: string[];
+            }>(
+                `/characters/features?class=${
+                    characterData.classes ? characterData.classes[0].class : ''
+                }`,
+                {},
+            );
+
+            setFeatures(response.data.features);
         } catch (error) {
             console.error(
                 '❌ An unknown error occurred while fetching bonus:',
@@ -89,6 +110,7 @@ export default function CharacterCreationScreen({
                         }}
                         onNext={() => {
                             getRacesBonus();
+                            getFeature();
                             setStep(step + 1);
                         }}
                         isPreviousDisabled={true}
@@ -127,6 +149,22 @@ export default function CharacterCreationScreen({
                 </>
             )}
             {step === 2 && (
+                <>
+                    <FeatureStep features={features} />
+                    <CharacterCreationNavigation
+                        onPrevious={() => {
+                            setStep(step - 1);
+                        }}
+                        onNext={() => {
+                            setStep(step + 1);
+                        }}
+                        isPreviousDisabled={false}
+                        isNextDisabled={false}
+                        nextTest="Suivant"
+                    />
+                </>
+            )}
+            {step === 10 && (
                 <>
                     <BackstoryStep
                         name={characterData.name}
