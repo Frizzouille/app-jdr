@@ -69,7 +69,7 @@ export class Character {
     };
 
     @Prop({ type: Array, required: true })
-    langages: [];
+    languages: [];
 }
 
 export const CharacterSchema = SchemaFactory.createForClass(Character);

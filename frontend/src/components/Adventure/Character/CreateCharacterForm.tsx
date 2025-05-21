@@ -4,8 +4,9 @@ import CharacterCreationNavigation from './CharacterCreationNavigation';
 import RaceStep from './RaceStep';
 import StatsStep from './StatsStep';
 import BackstoryStep from './BackstoryStep';
+import FeaturesStep from './FeaturesStep';
+import SkillsStep from './SkillsStep';
 import API from '../../../services/api';
-import FeatureStep from './FeatureStep';
 
 export type CharacterFormData = {
     adventureId: string;
@@ -33,7 +34,11 @@ export default function CharacterCreationScreen({
         Partial<CharacterFormData>
     >({});
     const [bonusRaces, setBonusRaces] = useState<{ [key: string]: number }>({});
-    const [features, setFeatures] = useState<string[]>([]);
+    const [features, setFeatures] = useState<{ [key: string]: string }>({});
+    const [skills, setSkills] = useState<{
+        classSkills: { [key: string]: string };
+        backgroundSkills: { [key: string]: string };
+    }>({ classSkills: {}, backgroundSkills: {} });
 
     const updateCharacter = (newData: Partial<CharacterFormData>) => {
         setCharacterData((prev) => ({ ...prev, ...newData }));
@@ -53,19 +58,47 @@ export default function CharacterCreationScreen({
             );
         }
     };
-
-    const getFeature = async () => {
+    const getFeatures = async () => {
         try {
             const response = await API.get<{
-                features: string[];
+                features: { [key: string]: string };
             }>(
-                `/characters/features?class=${
+                `/characters/features/${
                     characterData.classes ? characterData.classes[0].class : ''
-                }`,
+                }?language=fr`,
                 {},
             );
 
             setFeatures(response.data.features);
+        } catch (error) {
+            console.error(
+                '❌ An unknown error occurred while fetching bonus:',
+                error,
+            );
+        }
+    };
+    const getSkillsOpportunities = async () => {
+        try {
+            const response = await API.get<{
+                skills: {
+                    classSkills: { [key: string]: string };
+                    backgroundSkills: { [key: string]: string };
+                };
+            }>(
+                `/characters/skills?language=fr${
+                    characterData.classes
+                        ? '&class=' + characterData.classes[0].class
+                        : ''
+                }` +
+                    `${
+                        characterData.background
+                            ? '&background=' + characterData.background
+                            : ''
+                    }`,
+                {},
+            );
+
+            setSkills(response.data.skills);
         } catch (error) {
             console.error(
                 '❌ An unknown error occurred while fetching bonus:',
@@ -110,7 +143,8 @@ export default function CharacterCreationScreen({
                         }}
                         onNext={() => {
                             getRacesBonus();
-                            getFeature();
+                            getFeatures();
+                            getSkillsOpportunities();
                             setStep(step + 1);
                         }}
                         isPreviousDisabled={true}
@@ -150,7 +184,23 @@ export default function CharacterCreationScreen({
             )}
             {step === 2 && (
                 <>
-                    <FeatureStep features={features} />
+                    <FeaturesStep features={features} />
+                    <CharacterCreationNavigation
+                        onPrevious={() => {
+                            setStep(step - 1);
+                        }}
+                        onNext={() => {
+                            setStep(step + 1);
+                        }}
+                        isPreviousDisabled={false}
+                        isNextDisabled={false}
+                        nextTest="Suivant"
+                    />
+                </>
+            )}
+            {step === 3 && (
+                <>
+                    <SkillsStep skills={skills} />
                     <CharacterCreationNavigation
                         onPrevious={() => {
                             setStep(step - 1);

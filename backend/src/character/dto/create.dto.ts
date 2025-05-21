@@ -83,5 +83,5 @@ export class CreateCharacterDto {
     };
 
     @IsArray()
-    langages: [];
+    languages: [];
 }

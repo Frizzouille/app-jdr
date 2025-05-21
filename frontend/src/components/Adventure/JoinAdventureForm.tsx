@@ -60,7 +60,6 @@ const JoinAdventureForm = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const [invitations, setInvitations] = useState<Invitation[] | undefined>();
-    const [adventureId, setAdventureId] = useState<false | string>(false);
     const isFocused = useIsFocused();
 
     const updateInvitation = async (id: string, status: boolean) => {
@@ -70,7 +69,9 @@ const JoinAdventureForm = () => {
                 status: status.toString(),
             });
             if (response.data.adventureId)
-                setAdventureId(response.data.adventureId);
+                navigation.navigate('AdventurePlayer', {
+                    idAdventure: response.data.adventureId,
+                });
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error(
@@ -111,13 +112,6 @@ const JoinAdventureForm = () => {
 
         fetchInvitations();
     }, [isFocused]);
-
-    useEffect(() => {
-        if (adventureId)
-            navigation.navigate('AdventurePlayer', {
-                idAdventure: adventureId,
-            });
-    }, [adventureId]);
 
     if (invitations && invitations.length > 0) {
         return (

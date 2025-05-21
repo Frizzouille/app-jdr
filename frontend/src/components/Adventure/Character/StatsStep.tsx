@@ -38,7 +38,7 @@ export default function StatsStep({ stats, bonus, onUpdate }: StatsStepProps) {
             } else newRepartitionPoint[stat] = stats[stat];
         }
         setRepartitionPoint(newRepartitionPoint);
-    });
+    }, []);
 
     useEffect(() => {
         let somme = 0;

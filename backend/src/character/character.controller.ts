@@ -4,6 +4,7 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Param,
     Post,
     Query,
     Request,
@@ -14,7 +15,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateCharacterDto } from './dto/create.dto';
 import { UserPayload } from 'src/auth/jwt.strategy';
 import { Types } from 'mongoose';
-
+import { Language } from './translations/typeTranslation';
 @Controller('characters')
 export class CharacterController {
     constructor(private readonly characterService: CharacterService) {}
@@ -26,11 +27,32 @@ export class CharacterController {
         return { bonus };
     }
 
-    @Get('features')
+    @Get('features/:className')
     @HttpCode(HttpStatus.OK)
-    async getFeatures(@Query('class') classe: string) {
-        const features = this.characterService.getFeaturesForClass(classe);
+    async getFeatures(
+        @Param('className') className: string,
+        @Query('language') language: Language = 'en',
+    ) {
+        const features = this.characterService.getFeaturesForClass(
+            language,
+            className,
+        );
         return { features };
+    }
+
+    @Get('skills')
+    @HttpCode(HttpStatus.OK)
+    async getSkills(
+        @Query('class') className: string | undefined,
+        @Query('background') background: string | undefined,
+        @Query('language') language: Language = 'en',
+    ) {
+        const skills = this.characterService.getSkillsForClassOrBackground(
+            language,
+            className,
+            background,
+        );
+        return { skills };
     }
 
     @UseGuards(JwtAuthGuard)

@@ -31,6 +31,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (accessToken)
         API.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
+
     useEffect(() => {
         if (!accessToken) return;
         setIsLoading(true);

@@ -67,6 +67,25 @@ export class AdventureController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Post(':id/invite')
+    @HttpCode(HttpStatus.CREATED)
+    async inviteUsers(
+        @Request() req: { user: UserPayload },
+        @Param('id') id: string,
+        @Body() post: { invitedUsers: string[] },
+    ) {
+        const userId = req.user.userId;
+        const invitedUsersId = await this.userService.getUsersByEmail(
+            post.invitedUsers,
+        );
+        return await this.invitationService.inviteUsers(
+            new Types.ObjectId(userId),
+            new Types.ObjectId(id),
+            invitedUsersId,
+        );
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Post('create')
     @HttpCode(HttpStatus.CREATED)
     async createAdventure(
@@ -78,24 +97,6 @@ export class AdventureController {
         return await this.adventureService.createAdventure(
             new Types.ObjectId(userId),
             createAdventureDto,
-        );
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Post(':id/invite')
-    @HttpCode(HttpStatus.CREATED)
-    async inviteUsers(
-        @Request() req: { user: UserPayload },
-        @Body() post: { aventureId: string; invitedUsers: string[] },
-    ) {
-        const userId = req.user.userId;
-        const invitedUsersId = await this.userService.getUsersByEmail(
-            post.invitedUsers,
-        );
-        return await this.invitationService.inviteUsers(
-            new Types.ObjectId(userId),
-            new Types.ObjectId(post.aventureId),
-            invitedUsersId,
         );
     }
 

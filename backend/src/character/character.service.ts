@@ -5,6 +5,10 @@ import { Character, CharacterDocument } from './schemas/character.schema';
 import { Model, Types } from 'mongoose';
 import { CreateCharacterDto } from './dto/create.dto';
 
+import { featuresTranslations } from './translations/featuresTranslation';
+import { skillsTranslations } from './translations/skillsTranslation';
+import { Language } from './translations/typeTranslation';
+
 @Injectable()
 export class CharacterService {
     constructor(
@@ -56,7 +60,7 @@ export class CharacterService {
         }
     }
 
-    getBonusForRace(race: string) {
+    getBonusForRace(race: string): Object {
         switch (race) {
             case 'highElf':
                 return { dexterity: 2, intelligence: 1 };
@@ -98,32 +102,222 @@ export class CharacterService {
         }
     }
 
-    getFeaturesForClass(className: string) {
+    getFeaturesForClass(
+        language: Language,
+        className: string,
+    ): { [key: string]: string } {
+        const featuresArray = this.getFeaturesArray(className);
+        const featuresObject: { [key: string]: string } = {};
+
+        for (const feature of featuresArray) {
+            featuresObject[feature] = featuresTranslations[feature][language]; // Valeur traduite
+        }
+
+        return featuresObject;
+    }
+
+    getSkillsForClassOrBackground(
+        language: Language,
+        className?: string,
+        background?: string,
+    ): {
+        classSkills: { [key: string]: string };
+        backgroundSkills: { [key: string]: string };
+    } {
+        const skills = this.getSkillsObject(className, background);
+        const skillsObject: {
+            classSkills: { [key: string]: string };
+            backgroundSkills: { [key: string]: string };
+        } = { classSkills: {}, backgroundSkills: {} };
+
+        for (const key in skills) {
+            for (const skill of skills[key]) {
+                skillsObject[key][skill] = skillsTranslations[skill][language]; // Valeur traduite
+            }
+        }
+
+        return skillsObject;
+    }
+
+    private getSkillsObject(
+        className?: string,
+        background?: string,
+    ): { classSkills: string[]; backgroundSkills: string[] } {
+        const classSkillsMap: Record<string, string[]> = {
+            barbarian: [
+                'athletics',
+                'animal_handling',
+                'intimidation',
+                'nature',
+                'perception',
+                'survival',
+            ],
+            bard: [
+                'acrobatics',
+                'arcana',
+                'athletics',
+                'stealth',
+                'animal_handling',
+                'sleight_of_hand',
+                'history',
+                'intimidation',
+                'insight',
+                'investigation',
+                'medecine',
+                'nature',
+                'perception',
+                'persuasion',
+                'religion',
+                'performance',
+                'survival',
+                'deception',
+            ],
+            cleric: [
+                'history',
+                'insight',
+                'medecine',
+                'persuasion',
+                'religion',
+            ],
+            druid: [
+                'arcana',
+                'animal_handling',
+                'insight',
+                'medecine',
+                'nature',
+                'perception',
+                'religion',
+                'survival',
+            ],
+            fighter: [
+                'acrobatics',
+                'athletics',
+                'animal_handling',
+                'history',
+                'intimidation',
+                'insight',
+                'perception',
+                'survival',
+            ],
+            monk: [
+                'acrobatics',
+                'athletics',
+                'stealth',
+                'history',
+                'insight',
+                'religion',
+            ],
+            paladin: [
+                'athletics',
+                'intimidation',
+                'insight',
+                'medecine',
+                'persuasion',
+                'religion',
+            ],
+            ranger: [
+                'athletics',
+                'stealth',
+                'animal_handling',
+                'insight',
+                'investigation',
+                'nature',
+                'perception',
+                'survival',
+            ],
+            rogue: [
+                'acrobatics',
+                'athletics',
+                'stealth',
+                'sleight_of_hand',
+                'intimidation',
+                'insight',
+                'investigation',
+                'perception',
+                'persuasion',
+                'performance',
+                'deception',
+            ],
+            warlock: [
+                'arcana',
+                'history',
+                'intimidation',
+                'investigation',
+                'nature',
+                'religion',
+                'deception',
+            ],
+            wizard: [
+                'arcana',
+                'history',
+                'insight',
+                'investigation',
+                'medecine',
+                'religion',
+            ],
+            sorcerer: [
+                'arcana',
+                'intimidation',
+                'insight',
+                'persuasion',
+                'religion',
+                'deception',
+            ],
+        };
+
+        const backgroundSkillsMap: Record<string, string[]> = {
+            acolyte: ['insight', 'religion'],
+            charlatan: ['sleight_of_hand', 'deception'],
+            criminal: ['stealth', 'deception'],
+            entertainer: ['acrobatics', 'performance'],
+            folk_hero: ['animal_handling', 'survival'],
+            guild_artisan: ['insight', 'persuasion'],
+            hermit: ['medecine', 'religion'],
+            knight: ['history', 'persuasion'],
+            noble: ['history', 'persuasion'],
+            outlander: ['athletics', 'survival'],
+            pirate: ['athletics', 'perception'],
+            sage: ['arcana', 'history'],
+            sailor: ['athletics', 'perception'],
+            soldier: ['athletics', 'intimidation'],
+            urchin: ['sleight_of_hand', 'stealth'],
+        };
+
+        return {
+            classSkills: className ? classSkillsMap[className] || [] : [],
+            backgroundSkills: background
+                ? backgroundSkillsMap[background] || []
+                : [],
+        };
+    }
+
+    private getFeaturesArray(className: string): string[] {
         switch (className) {
             case 'barbarian':
-                return ['Rage', 'Défense sans armure'];
+                return ['rage', 'unarmored_defense'];
             case 'bard':
-                return ['Inspiration bardique', 'Lancer de sorts'];
+                return ['bardic_inspiration', 'spellcasting'];
             case 'cleric':
-                return ['Domaine divin', 'Lancer de sorts'];
+                return ['divine_domain', 'spellcasting'];
             case 'druid':
-                return ['Langue druidique', 'Lancer de sorts'];
+                return ['druidic_language', 'spellcasting'];
             case 'fighter':
-                return ['Style de combat', 'Second souffle'];
+                return ['fighting_style', 'second_wind'];
             case 'monk':
-                return ['Arts martiaux', 'Défense sans armure'];
+                return ['martial_arts', 'unarmored_defense'];
             case 'paladin':
-                return ['Sens divin', 'Imposition des mains'];
+                return ['divine_sense', 'lay_on_hands'];
             case 'ranger':
-                return ['Ennemi juré', 'Explorateur naturel'];
+                return ['favored_enemy', 'natural_explorer'];
             case 'rogue':
-                return ['Attaque sournoise', 'Expertise'];
+                return ['sneak_attack', 'expertise'];
             case 'wizard':
-                return ['Récupération arcanique', 'Lancer de sorts'];
+                return ['arcane_recovery', 'spellcasting'];
             case 'sorcerer':
-                return ['Origine magique', 'Lancer de sorts'];
+                return ['magical_origin', 'spellcasting'];
             case 'warlock':
-                return ['Magie occulte', 'Patron surnaturel'];
+                return ['occult_magic', 'supernatural_patron'];
+
             default:
                 return [];
         }

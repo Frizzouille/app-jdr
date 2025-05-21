@@ -1,12 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function FeatureStep({ features }: { features: string[] }) {
+export default function SkillsStep({
+    skills,
+}: {
+    skills: {
+        classSkills: { [key: string]: string };
+        backgroundSkills: { [key: string]: string };
+    };
+}) {
     return (
         <View style={styles.content}>
             <Text style={styles.title}>Vos capacités de classe :</Text>
-            {features.map((feature, index) => (
-                <Text key={index}>{feature}</Text>
-            ))}
         </View>
     );
 }
