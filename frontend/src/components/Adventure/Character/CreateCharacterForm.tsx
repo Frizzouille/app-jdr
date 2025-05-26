@@ -5,7 +5,7 @@ import RaceStep from './RaceStep';
 import StatsStep from './StatsStep';
 import BackstoryStep from './BackstoryStep';
 import FeaturesStep from './FeaturesStep';
-import SkillsStep from './SkillsStep';
+import ProficienciesStep from './ProficienciesStep';
 import API from '../../../services/api';
 
 export type CharacterFormData = {
@@ -35,10 +35,17 @@ export default function CharacterCreationScreen({
     >({});
     const [bonusRaces, setBonusRaces] = useState<{ [key: string]: number }>({});
     const [features, setFeatures] = useState<{ [key: string]: string }>({});
-    const [skills, setSkills] = useState<{
+    const [proficiencies, setProficiencies] = useState<{
         classSkills: { [key: string]: string };
+        numberClassSkills: number;
         backgroundSkills: { [key: string]: string };
-    }>({ classSkills: {}, backgroundSkills: {} });
+        raceLanguages: { [key: string]: string };
+    }>({
+        classSkills: {},
+        numberClassSkills: 0,
+        backgroundSkills: {},
+        raceLanguages: {},
+    });
 
     const updateCharacter = (newData: Partial<CharacterFormData>) => {
         setCharacterData((prev) => ({ ...prev, ...newData }));
@@ -77,15 +84,17 @@ export default function CharacterCreationScreen({
             );
         }
     };
-    const getSkillsOpportunities = async () => {
+    const getProficiencies = async () => {
         try {
             const response = await API.get<{
-                skills: {
+                proficiencies: {
                     classSkills: { [key: string]: string };
+                    numberClassSkills: number;
                     backgroundSkills: { [key: string]: string };
+                    raceLanguages: { [key: string]: string };
                 };
             }>(
-                `/characters/skills?language=fr${
+                `/characters/proficiencies?language=fr${
                     characterData.classes
                         ? '&class=' + characterData.classes[0].class
                         : ''
@@ -98,7 +107,7 @@ export default function CharacterCreationScreen({
                 {},
             );
 
-            setSkills(response.data.skills);
+            setProficiencies(response.data.proficiencies);
         } catch (error) {
             console.error(
                 '❌ An unknown error occurred while fetching bonus:',
@@ -144,7 +153,7 @@ export default function CharacterCreationScreen({
                         onNext={() => {
                             getRacesBonus();
                             getFeatures();
-                            getSkillsOpportunities();
+                            getProficiencies();
                             setStep(step + 1);
                         }}
                         isPreviousDisabled={true}
@@ -200,7 +209,7 @@ export default function CharacterCreationScreen({
             )}
             {step === 3 && (
                 <>
-                    <SkillsStep skills={skills} />
+                    <ProficienciesStep proficiencies={proficiencies} />
                     <CharacterCreationNavigation
                         onPrevious={() => {
                             setStep(step - 1);

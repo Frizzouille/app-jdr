@@ -7,6 +7,7 @@ import { CreateCharacterDto } from './dto/create.dto';
 
 import { featuresTranslations } from './translations/featuresTranslation';
 import { skillsTranslations } from './translations/skillsTranslation';
+import { raceLanguagesTranslations } from './translations/raceLanguagesTranslation';
 import { Language } from './translations/typeTranslation';
 
 @Injectable()
@@ -122,13 +123,23 @@ export class CharacterService {
         background?: string,
     ): {
         classSkills: { [key: string]: string };
+        numberClassSkills: number;
         backgroundSkills: { [key: string]: string };
     } {
-        const skills = this.getSkillsObject(className, background);
+        const { numberClassSkills, ...skills } = this.getSkillsObject(
+            className,
+            background,
+        );
+
         const skillsObject: {
             classSkills: { [key: string]: string };
+            numberClassSkills: number;
             backgroundSkills: { [key: string]: string };
-        } = { classSkills: {}, backgroundSkills: {} };
+        } = {
+            classSkills: {},
+            numberClassSkills: numberClassSkills,
+            backgroundSkills: {},
+        };
 
         for (const key in skills) {
             for (const skill of skills[key]) {
@@ -139,10 +150,24 @@ export class CharacterService {
         return skillsObject;
     }
 
+    getRaceLanguages(language: Language) {
+        const raceLanguages = {};
+
+        for (const key in raceLanguagesTranslations) {
+            raceLanguages[key] = raceLanguagesTranslations[key][language];
+        }
+
+        return raceLanguages;
+    }
+
     private getSkillsObject(
         className?: string,
         background?: string,
-    ): { classSkills: string[]; backgroundSkills: string[] } {
+    ): {
+        classSkills: string[];
+        numberClassSkills: number;
+        backgroundSkills: string[];
+    } {
         const classSkillsMap: Record<string, string[]> = {
             barbarian: [
                 'athletics',
@@ -283,8 +308,23 @@ export class CharacterService {
             urchin: ['sleight_of_hand', 'stealth'],
         };
 
+        let numberClassSkills = 0;
+        switch (className) {
+            case 'bard':
+            case 'ranger':
+                numberClassSkills = 3;
+                break;
+            case 'cleric':
+            case 'rogue':
+                numberClassSkills = 4;
+                break;
+            default:
+                numberClassSkills = 2;
+                break;
+        }
         return {
             classSkills: className ? classSkillsMap[className] || [] : [],
+            numberClassSkills: numberClassSkills,
             backgroundSkills: background
                 ? backgroundSkillsMap[background] || []
                 : [],

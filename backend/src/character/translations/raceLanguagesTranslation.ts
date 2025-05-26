@@ -1,0 +1,18 @@
+export const raceLanguagesTranslations = {
+    common: { en: 'Common', fr: 'Commun' },
+    dwarvish: { en: 'Dwarvish', fr: 'Nain' },
+    elvish: { en: 'Elvish', fr: 'Elfique' },
+    giant: { en: 'Giant', fr: 'Géant' },
+    gnomish: { en: 'Gnomish', fr: 'Gnome' },
+    goblin: { en: 'Goblin', fr: 'Gobelin' },
+    halfling: { en: 'Halfling', fr: 'Halfelin' },
+    orc: { en: 'Orc', fr: 'Orc' },
+    abyssal: { en: 'Abyssal', fr: 'Abyssal' },
+    celestial: { en: 'Celestial', fr: 'Céleste' },
+    deep_speech: { en: 'Deep speech', fr: 'Profond' },
+    draconic: { en: 'Draconic', fr: 'Draconique' },
+    infernal: { en: 'Infernal', fr: 'Infernal' },
+    primordial: { en: 'Primordial', fr: 'Primordial' },
+    sylvan: { en: 'Sylvan', fr: 'Sylvestre' },
+    undercommon: { en: 'Undercommon', fr: 'Commun des profondeurs' },
+};

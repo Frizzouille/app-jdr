@@ -40,7 +40,7 @@ export class CharacterController {
         return { features };
     }
 
-    @Get('skills')
+    @Get('proficiencies')
     @HttpCode(HttpStatus.OK)
     async getSkills(
         @Query('class') className: string | undefined,
@@ -52,7 +52,8 @@ export class CharacterController {
             className,
             background,
         );
-        return { skills };
+        const raceLanguages = this.characterService.getRaceLanguages(language);
+        return { proficiencies: { ...skills, raceLanguages } };
     }
 
     @UseGuards(JwtAuthGuard)
