@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
+import axios from 'axios';
 import CharacterCreationNavigation from './CharacterCreationNavigation';
 import RaceStep from './RaceStep';
 import StatsStep from './StatsStep';
@@ -7,6 +8,8 @@ import BackstoryStep from './BackstoryStep';
 import FeaturesStep from './FeaturesStep';
 import ProficienciesStep from './ProficienciesStep';
 import API from '../../../services/api';
+import LifeStep from './LifeStep';
+import { useStateForPath } from '@react-navigation/native';
 
 export type CharacterFormData = {
     adventureId: string;
@@ -20,6 +23,8 @@ export type CharacterFormData = {
     stats: { [key: string]: number };
     description: string;
     backstory: string;
+    skills: { classSkills: string[]; backgroundSkills: string[] };
+    languages: string[];
 };
 
 export default function CharacterCreationScreen({
@@ -32,105 +37,22 @@ export default function CharacterCreationScreen({
     const [step, setStep] = useState(0);
     const [characterData, setCharacterData] = useState<
         Partial<CharacterFormData>
-    >({});
-    const [bonusRaces, setBonusRaces] = useState<{ [key: string]: number }>({});
-    const [features, setFeatures] = useState<{ [key: string]: string }>({});
-    const [proficiencies, setProficiencies] = useState<{
-        classSkills: { [key: string]: string };
-        numberClassSkills: number;
-        backgroundSkills: { [key: string]: string };
-        raceLanguages: { [key: string]: string };
-    }>({
-        classSkills: {},
-        numberClassSkills: 0,
-        backgroundSkills: {},
-        raceLanguages: {},
-    });
+    >({ adventureId: adventureId });
 
     const updateCharacter = (newData: Partial<CharacterFormData>) => {
         setCharacterData((prev) => ({ ...prev, ...newData }));
     };
 
-    const getRacesBonus = async () => {
-        try {
-            const response = await API.get<{
-                bonus: { [key: string]: number };
-            }>(`/characters/bonus?race=${characterData.race}`, {});
+    const [listRaces, updateListRaces] = useState<{ [key: string]: {} }>({});
 
-            setBonusRaces(response.data.bonus);
-        } catch (error) {
-            console.error(
-                '❌ An unknown error occurred while fetching bonus:',
-                error,
-            );
-        }
-    };
-    const getFeatures = async () => {
-        try {
-            const response = await API.get<{
-                features: { [key: string]: string };
-            }>(
-                `/characters/features/${
-                    characterData.classes ? characterData.classes[0].class : ''
-                }?language=fr`,
-                {},
-            );
+    const APIDnD = axios.create({
+        baseURL: 'https://www.dnd5eapi.co',
+        timeout: 5000,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
 
-            setFeatures(response.data.features);
-        } catch (error) {
-            console.error(
-                '❌ An unknown error occurred while fetching bonus:',
-                error,
-            );
-        }
-    };
-    const getProficiencies = async () => {
-        try {
-            const response = await API.get<{
-                proficiencies: {
-                    classSkills: { [key: string]: string };
-                    numberClassSkills: number;
-                    backgroundSkills: { [key: string]: string };
-                    raceLanguages: { [key: string]: string };
-                };
-            }>(
-                `/characters/proficiencies?language=fr${
-                    characterData.classes
-                        ? '&class=' + characterData.classes[0].class
-                        : ''
-                }` +
-                    `${
-                        characterData.background
-                            ? '&background=' + characterData.background
-                            : ''
-                    }`,
-                {},
-            );
-
-            setProficiencies(response.data.proficiencies);
-        } catch (error) {
-            console.error(
-                '❌ An unknown error occurred while fetching bonus:',
-                error,
-            );
-        }
-    };
-
-    const createCharacters = async () => {
-        try {
-            const response = await API.post('/characters/create', {
-                adventureId,
-                characterData,
-            });
-
-            onCharacterCreated(response.data.character);
-        } catch (error) {
-            console.error(
-                '❌ An unknown error occurred while fetching bonus:',
-                error,
-            );
-        }
-    };
     return (
         <ScrollView
             contentContainerStyle={{
@@ -145,38 +67,9 @@ export default function CharacterCreationScreen({
                     <RaceStep
                         dataCharacter={characterData}
                         updateCharacter={updateCharacter}
-                    />
-                    <CharacterCreationNavigation
-                        onPrevious={() => {
-                            setStep(step - 1);
-                        }}
-                        onNext={() => {
-                            getRacesBonus();
-                            getFeatures();
-                            getProficiencies();
-                            setStep(step + 1);
-                        }}
-                        isPreviousDisabled={true}
-                        isNextDisabled={
-                            !characterData.race ||
-                            !characterData.classes ||
-                            !characterData.background
-                        }
-                        nextTest="Suivant"
-                    />
-                </>
-            )}
-            {step === 1 && (
-                <>
-                    <StatsStep
-                        stats={characterData.stats || {}}
-                        bonus={bonusRaces}
-                        onUpdate={(updatedStats: { [key: string]: number }) => {
-                            updateCharacter({
-                                ...characterData,
-                                stats: updatedStats,
-                            });
-                        }}
+                        APIDnD={APIDnD}
+                        listRaces={listRaces}
+                        updateListRaces={updateListRaces}
                     />
                     <CharacterCreationNavigation
                         onPrevious={() => {
@@ -185,61 +78,6 @@ export default function CharacterCreationScreen({
                         onNext={() => {
                             setStep(step + 1);
                         }}
-                        isPreviousDisabled={false}
-                        isNextDisabled={false}
-                        nextTest="Suivant"
-                    />
-                </>
-            )}
-            {step === 2 && (
-                <>
-                    <FeaturesStep features={features} />
-                    <CharacterCreationNavigation
-                        onPrevious={() => {
-                            setStep(step - 1);
-                        }}
-                        onNext={() => {
-                            setStep(step + 1);
-                        }}
-                        isPreviousDisabled={false}
-                        isNextDisabled={false}
-                        nextTest="Suivant"
-                    />
-                </>
-            )}
-            {step === 3 && (
-                <>
-                    <ProficienciesStep proficiencies={proficiencies} />
-                    <CharacterCreationNavigation
-                        onPrevious={() => {
-                            setStep(step - 1);
-                        }}
-                        onNext={() => {
-                            setStep(step + 1);
-                        }}
-                        isPreviousDisabled={false}
-                        isNextDisabled={false}
-                        nextTest="Suivant"
-                    />
-                </>
-            )}
-            {step === 10 && (
-                <>
-                    <BackstoryStep
-                        name={characterData.name}
-                        backstory={characterData.backstory}
-                        onUpdate={updateCharacter}
-                    />
-                    <CharacterCreationNavigation
-                        onPrevious={() => {
-                            setStep(step - 1);
-                        }}
-                        onNext={() => {
-                            createCharacters();
-                        }}
-                        isPreviousDisabled={false}
-                        isNextDisabled={false}
-                        nextTest="Créer le personnage"
                     />
                 </>
             )}
