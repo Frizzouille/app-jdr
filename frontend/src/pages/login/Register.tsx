@@ -104,6 +104,15 @@ export default function RegisterScreen() {
                         onChangeText={setConfirmedPassword}
                         secureTextEntry
                     />
+                    <Text >
+                        Already have an account ?{' '}
+                        <Text
+                        style={loginStyle.link}
+                        onPress={() => navigation.navigate('Login')} 
+                        >
+                        Login
+                        </Text>
+                    </Text>
                     <View style={{marginBottom: 10}}>
                         {Array.isArray(errorMessage) && errorMessage.length > 0 && (
                             <>

@@ -90,4 +90,8 @@ export const loginStyle = StyleSheet.create({
         textAlign: 'center',
         
     },
+    link: {
+        color: '#591802',
+        fontWeight: 'bold',
+    },
 });

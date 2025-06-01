@@ -27,6 +27,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomWidth: 1,
         borderColor: '#333',
+
+        // 💡 iOS shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+
+        // 💡 Android shadow
+        elevation: 3,
     },
 });
 
