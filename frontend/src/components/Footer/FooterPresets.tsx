@@ -1,7 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity } from 'react-native';
+import { 
+    TouchableOpacity,
+    StyleSheet,
+    Image
+ } from 'react-native';
 import { ReactNode } from 'react';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+
+import iconMyAccount from '../../../assets/icon/iconMyAccount.png';
+import iconMyAdventures from '../../../assets/icon/iconMyAdventures.png';
+import iconSearch from '../../../assets/icon/iconSearch.png';
 
 type preset = {
     leftButton?: ReactNode;
@@ -15,29 +23,17 @@ export const useFooterPresets = (context: string) => {
         home: {
             leftButton: (
                 <TouchableOpacity onPress={() => {}}>
-                    <MaterialCommunityIcons
-                        name="magnify"
-                        size={24}
-                        color="black"
-                    />
+                    <Image source={iconSearch} style={styles.iconFooter} />
                 </TouchableOpacity>
             ),
             centerButton: (
                 <TouchableOpacity onPress={() => {}}>
-                    <MaterialCommunityIcons
-                        name="human"
-                        size={24}
-                        color="black"
-                    />
+                    <Image source={iconMyAdventures} style={styles.iconFooter} />
                 </TouchableOpacity>
             ),
             rightButton: (
                 <TouchableOpacity onPress={() => {}}>
-                    <MaterialCommunityIcons
-                        name="account-cowboy-hat"
-                        size={24}
-                        color="black"
-                    />
+                    <Image source={iconMyAccount} style={styles.iconFooter} />
                 </TouchableOpacity>
             ),
         },
@@ -92,3 +88,11 @@ export const useFooterPresets = (context: string) => {
 
     return presets[context] || {};
 };
+
+
+const styles = StyleSheet.create({
+    iconFooter:{
+        width:50,
+        height:50,
+    },
+});
