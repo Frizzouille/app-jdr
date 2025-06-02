@@ -2,7 +2,7 @@ import SelectableGrid from './SelectableGrid';
 import { CharacterFormData } from './CreateCharacterForm';
 import { useEffect, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import axios, { AxiosInstance } from 'axios';
+import { AxiosInstance } from 'axios';
 
 type RaceStepProps = {
     dataCharacter: Partial<CharacterFormData>;
@@ -147,6 +147,21 @@ export default function RaceStep({
                                     {selectedRaceDetails.size_description}
                                 </Text>
                             )}
+                        </View>
+                    )}
+
+                    {/* Langue */}
+                    {selectedRaceDetails.languages?.length > 0 && (
+                        <View style={styles.detailSection}>
+                            <Text style={styles.sectionTitle}>Languages:</Text>
+                            <Text style={styles.detailDescription}>
+                                {selectedRaceDetails.languages
+                                    .map((val: { name: string }) => val.name)
+                                    .join(', ')}
+                                {selectedRaceDetails.language_options
+                                    ? ', one language of your choice'
+                                    : ''}
+                            </Text>
                         </View>
                     )}
                 </View>

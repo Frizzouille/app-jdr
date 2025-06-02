@@ -3,13 +3,7 @@ import { ScrollView } from 'react-native';
 import axios from 'axios';
 import CharacterCreationNavigation from './CharacterCreationNavigation';
 import RaceStep from './RaceStep';
-import StatsStep from './StatsStep';
-import BackstoryStep from './BackstoryStep';
-import FeaturesStep from './FeaturesStep';
-import ProficienciesStep from './ProficienciesStep';
-import API from '../../../services/api';
-import LifeStep from './LifeStep';
-import { useStateForPath } from '@react-navigation/native';
+import ClassStep from './ClassStep';
 
 export type CharacterFormData = {
     adventureId: string;
@@ -44,6 +38,9 @@ export default function CharacterCreationScreen({
     };
 
     const [listRaces, updateListRaces] = useState<{ [key: string]: {} }>({});
+    const [listClasses, updateListClasses] = useState<{ [key: string]: {} }>(
+        {},
+    );
 
     const APIDnD = axios.create({
         baseURL: 'https://www.dnd5eapi.co',
@@ -71,16 +68,27 @@ export default function CharacterCreationScreen({
                         listRaces={listRaces}
                         updateListRaces={updateListRaces}
                     />
-                    <CharacterCreationNavigation
-                        onPrevious={() => {
-                            setStep(step - 1);
-                        }}
-                        onNext={() => {
-                            setStep(step + 1);
-                        }}
+                </>
+            )}
+            {step === 1 && (
+                <>
+                    <ClassStep
+                        dataCharacter={characterData}
+                        updateCharacter={updateCharacter}
+                        APIDnD={APIDnD}
+                        listClasses={listClasses}
+                        updateListClasses={updateListClasses}
                     />
                 </>
             )}
+            <CharacterCreationNavigation
+                onPrevious={() => {
+                    setStep(step - 1);
+                }}
+                onNext={() => {
+                    setStep(step + 1);
+                }}
+            />
         </ScrollView>
     );
 }
