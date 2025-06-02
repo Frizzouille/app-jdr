@@ -1,4 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { 
+    StyleSheet, 
+    Text, 
+    View,
+    Image
+} from 'react-native';
 
 const Header = ({
     title = 'Mon Application',
@@ -12,7 +17,13 @@ const Header = ({
     return (
         <View style={styles.header}>
             {leftButton || <View style={{ width: 24 }} />}
-            <Text style={styles.title}>{title}</Text>
+            
+             <Image
+                source={require('../../../assets/logoTemp.png')} // remplace par ton chemin
+                style={styles.logo}
+                resizeMode="contain"
+            />
+
             {rightButton || <View style={{ width: 24 }} />}
         </View>
     );
@@ -20,7 +31,7 @@ const Header = ({
 
 const styles = StyleSheet.create({
     header: {
-        flex: 0.1,
+        height: 90,
         backgroundColor: '#FFEDD3',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -28,18 +39,18 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: '#333',
 
-        // 💡 iOS shadow
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 6,
-
-        // 💡 Android shadow
         elevation: 3,
     },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    logo: {
+        height: 70,
     },
 });
 

@@ -100,8 +100,18 @@ const HomeScreen = () => {
                     })
                 }
             >
-                <Text style={styles.adventureTitle}>{item.title}</Text>
-                <MaterialCommunityIcons name="crown" size={24} color="black" />
+                <ImageBackground 
+                    source={require('../../assets/adventureBg.jpg')}
+                    style={styles.backgroundImage}
+                    imageStyle={styles.imageStyle}
+                    resizeMode="cover"
+                    >
+                    <View style={styles.overlay} />
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={styles.adventureTitle}>{item.title}</Text>
+                        <MaterialCommunityIcons name="crown" style={styles.adventureIcon} />
+                    </View>
+                </ImageBackground>
             </TouchableOpacity>
         ) : (
             <TouchableOpacity
@@ -112,8 +122,18 @@ const HomeScreen = () => {
                     })
                 }
             >
-                <Text style={styles.adventureTitle}>{item.title}</Text>
-                <MaterialCommunityIcons name="sword" size={24} color="black" />
+                <ImageBackground 
+                    source={require('../../assets/adventureBg.jpg')}
+                    style={styles.backgroundImage}
+                    imageStyle={styles.imageStyle}
+                    resizeMode="cover"
+                    >
+                    <View style={styles.overlay} />
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={styles.adventureTitle}>{item.title}</Text>
+                        <MaterialCommunityIcons name="sword" style={styles.adventureIcon} />
+                    </View>
+                </ImageBackground>
             </TouchableOpacity>
         );
     };
@@ -132,12 +152,14 @@ const HomeScreen = () => {
                         }
                     >
                         <ImageBackground 
-                            source={require('../../assets/adventureBg.jpg')}
-                            style={styles.backgroundImage}
+                            source={require('../../assets/adventureBg-1.png')}
+                            style={[styles.backgroundImage, { height: 250, alignItems: 'flex-end', paddingBottom: 15}]}
                             imageStyle={styles.imageStyle}
                             resizeMode="cover"
+                            
                             >
-                            <Text style={styles.buttonText}>
+                            <View style={styles.overlay} />
+                            <Text style={styles.adventureTitle}>
                                 {lastOpenedAdventure.title}
                             </Text>
                         </ImageBackground>
@@ -165,15 +187,23 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+
+    // CONTENT CONTAINER
     container: {
         flex: 1,
-        backgroundColor: colors.dark,
+        backgroundColor: colors.red,
     },
     content: {
         flex: 1,
-        padding: 16,
-        alignItems: 'center',
+        padding: 30,
     },
+
+    overlay:{
+        ...StyleSheet.absoluteFillObject, // équivaut à { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }
+        backgroundColor: 'rgba(0, 0, 0, 0.3)', // noir avec opacité 40%
+        borderRadius: 25, // doit correspondre au borderRadius de l'image
+    },
+    // FIRST IMAGE THE LAST ADVENTURE OPENED
     lastAdventureItem: {
         shadowColor: '#000',
         shadowOffset: { width: 2, height: 2 },
@@ -181,23 +211,28 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 4,
 
-        marginBottom: 16,
+        marginBottom: 15,
         borderRadius: 25,
         width:'100%',
         borderWidth: 0,
     },
     backgroundImage: {
         width: '100%',
-        height: 250,
+        height: 100,
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 25,
         overflow: 'hidden',
+        borderWidth: 3,
+        borderColor: colors.light,
+        
     },
     imageStyle: {
         borderRadius: 25,
     },
 
+    // NEW ADVENTURE BTN 
     newAdventureButton: {
         backgroundColor: colors.light,
         shadowColor: '#000',
@@ -206,38 +241,42 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 4,
 
-        maxWidth: 300,
-        paddingVertical: 15,
-        marginBottom: 16,
+        paddingVertical: 20,
+        marginBottom: 15,
         borderRadius: 25,
         width:'100%',
         borderWidth: 0,
     },
-    
     buttonText: {
-        color: colors.dark,
+        color: colors.brown,
         textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 18,
     },
+
+    // ADVENTURE LIST 
     listContainer: {
-        paddingBottom: 16,
+        width: '100%',
     },
     adventureItem: {
+        width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: 'white',
-        padding: 16,
-        borderRadius: 8,
-        marginBottom: 8,
+        marginBottom: 15,
         elevation: 2,
+
     },
     adventureTitle: {
-        fontSize: 18,
+        color: colors.light,
+        textAlign: 'center',
         fontWeight: 'bold',
-        marginBottom: 4,
+        fontSize: 18,
     },
-    adventureDescription: {
-        color: '#666',
+    adventureIcon: {
+        color: colors.light,
+        fontSize: 30,
+        marginLeft: 10,
     },
 });
 

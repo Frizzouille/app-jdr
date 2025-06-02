@@ -77,7 +77,7 @@ const LoginScreen = () => {
             <View style={loginStyle.container}>
                 <View style={loginStyle.card}>
                     <Image
-                        source={require('../../img/logoTemp.png')}
+                        source={require('../../../assets/logoTemp.png')}
                         style={loginStyle.logo}
                         resizeMode="contain"
                     />
