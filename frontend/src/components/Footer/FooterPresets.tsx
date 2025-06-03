@@ -2,14 +2,11 @@ import { useNavigation } from '@react-navigation/native';
 import { 
     TouchableOpacity,
     StyleSheet,
+    Text,
     Image
  } from 'react-native';
 import { ReactNode } from 'react';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-
-import iconMyAccount from '../../../assets/icon/iconMyAccount.png';
-import iconMyAdventures from '../../../assets/icon/iconMyAdventures.png';
-import iconSearch from '../../../assets/icon/iconSearch.png';
 
 type preset = {
     leftButton?: ReactNode;
@@ -22,18 +19,21 @@ export const useFooterPresets = (context: string) => {
     const presets: Record<string, preset> = {
         home: {
             leftButton: (
-                <TouchableOpacity onPress={() => {}}>
-                    <Image source={iconSearch} style={styles.iconFooter} />
+                <TouchableOpacity onPress={() => {}} style={styles.iconContainer}>
+                    <Image source={require('../../../assets/icon/iconSearch.png')} style={styles.iconFooter} />
+                    <Text style={styles.textFooter}>Découvrir !</Text>
                 </TouchableOpacity>
             ),
             centerButton: (
-                <TouchableOpacity onPress={() => {}}>
-                    <Image source={iconMyAdventures} style={styles.iconFooter} />
+                <TouchableOpacity onPress={() => {}} style={styles.iconContainer}>
+                    <Image source={require('../../../assets/icon/iconMyAdventures.png')} style={styles.iconFooter} />
+                    <Text style={styles.textFooter}>Mes aventures</Text>
                 </TouchableOpacity>
             ),
             rightButton: (
-                <TouchableOpacity onPress={() => {}}>
-                    <Image source={iconMyAccount} style={styles.iconFooter} />
+                <TouchableOpacity onPress={() => {}} style={styles.iconContainer }>
+                    <Image source={require('../../../assets/icon/iconMyAccount.png')} style={[styles.iconFooter, {width: 35, height: 35}]} />
+                    <Text style={styles.textFooter}>Mon compte</Text>
                 </TouchableOpacity>
             ),
         },
@@ -92,7 +92,15 @@ export const useFooterPresets = (context: string) => {
 
 const styles = StyleSheet.create({
     iconFooter:{
-        width:50,
-        height:50,
+        width:40,
+        height:40,
+    },
+    iconContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    textFooter: {
+        fontWeight:'bold',
+        fontSize: 14,
     },
 });

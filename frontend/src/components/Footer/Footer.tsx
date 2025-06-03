@@ -1,5 +1,9 @@
 import { StyleSheet, View } from 'react-native';
 
+// Style
+import { colors } from '../../styles/colors';
+
+
 const Footer = ({
     leftButton,
     centerButton,
@@ -20,13 +24,12 @@ const Footer = ({
 
 const styles = StyleSheet.create({
     footer: {
-        flex: 0.1,
-        backgroundColor: '#FFEDD3',
+        backgroundColor: colors.light,
         flexDirection: 'row',
         justifyContent: 'space-around',
-        alignItems: 'center',
-        borderBottomWidth: 1,
-        borderColor: '#333',
+        alignItems: 'flex-end',
+        paddingBottom: 15,
+        height:90,
 
         // 💡 iOS shadow
         shadowColor: '#000',
