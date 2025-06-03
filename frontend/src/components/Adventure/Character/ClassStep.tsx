@@ -22,6 +22,15 @@ export default function ClassStep({
     const [loading, setLoading] = useState(true);
     const [selectedClassDetails, setSelectedClassDetails] = useState<any>(null);
 
+    const abrevAbilitiesToAbilities = {
+        CHA: 'Charisma',
+        CON: 'Constitution',
+        DEX: 'Dexterity',
+        INT: 'Intelligence',
+        STR: 'Strength',
+        WIS: 'Wisdom',
+    };
+    type SavingThrowAbbrev = keyof typeof abrevAbilitiesToAbilities;
     useEffect(() => {
         if (Object.keys(listClasses).length === 0) {
             fetchClassesList();
@@ -61,7 +70,7 @@ export default function ClassStep({
     };
 
     const handleClassSelect = async (classKey: string) => {
-        if (!listClasses[classKey].ability_bonuses) {
+        if (!listClasses[classKey].hit_die) {
             try {
                 const response = await APIDnD.get(listClasses[classKey]?.url);
 
@@ -115,6 +124,86 @@ export default function ClassStep({
                     <Text style={styles.detailsTitle}>
                         {selectedClassDetails.name} Details
                     </Text>
+
+                    {/* Hit Dice */}
+                    <View style={styles.detailSection}>
+                        <Text style={styles.sectionTitle}>Dé de vie:</Text>
+                        <Text style={styles.detailDescription}>
+                            {selectedClassDetails.hit_die}
+                        </Text>
+                    </View>
+
+                    {/* Armors */}
+                    <View style={styles.detailSection}>
+                        <Text style={styles.sectionTitle}>Armors:</Text>
+                        <Text style={styles.detailDescription}>
+                            {selectedClassDetails.proficiencies
+                                .map((val: { index: string; name: string }) =>
+                                    val.index.includes('-armor') ||
+                                    val.index === 'shields'
+                                        ? val.name
+                                        : '',
+                                )
+                                .filter((val: string) => val !== '')
+                                .join(', ') || 'None'}
+                        </Text>
+                    </View>
+
+                    {/* Weapons */}
+                    <View style={styles.detailSection}>
+                        <Text style={styles.sectionTitle}>Weapons:</Text>
+                        <Text style={styles.detailDescription}>
+                            {selectedClassDetails.proficiencies
+                                .map((val: { index: string; name: string }) =>
+                                    !val.index.includes('-armor') &&
+                                    !(val.index === 'shields') &&
+                                    !val.index.includes('-kit') &&
+                                    !val.index.includes('-tools') &&
+                                    !val.index.includes('saving-throw-')
+                                        ? val.name
+                                        : '',
+                                )
+                                .filter((val: string) => val !== '')
+                                .join(', ') || 'None'}
+                        </Text>
+                    </View>
+
+                    {/* Saving Throws */}
+                    <View style={styles.detailSection}>
+                        <Text style={styles.sectionTitle}>Saving throws:</Text>
+                        <Text style={styles.detailDescription}>
+                            {selectedClassDetails.saving_throws
+                                .map((val: { name: SavingThrowAbbrev }) =>
+                                    val.name in abrevAbilitiesToAbilities
+                                        ? abrevAbilitiesToAbilities[
+                                              val.name as SavingThrowAbbrev
+                                          ]
+                                        : val.name,
+                                )
+                                .join(', ')}
+                        </Text>
+                    </View>
+
+                    {/* Skills */}
+                    <View style={styles.detailSection}>
+                        <Text style={styles.sectionTitle}>Skills:</Text>
+                        <Text style={styles.detailDescription}>
+                            {selectedClassDetails.proficiency_choices[0].desc}
+                        </Text>
+                    </View>
+
+                    {/* Others */}
+                    {selectedClassDetails.proficiency_choices[1] && (
+                        <View style={styles.detailSection}>
+                            <Text style={styles.sectionTitle}>Others:</Text>
+                            <Text style={styles.detailDescription}>
+                                {
+                                    selectedClassDetails.proficiency_choices[1]
+                                        .desc
+                                }
+                            </Text>
+                        </View>
+                    )}
                 </View>
             )}
         </View>
@@ -152,7 +241,7 @@ const styles = StyleSheet.create({
         marginTop: 2,
     },
     detailDescription: {
-        fontSize: 12,
+        fontSize: 14,
         color: '#666',
         marginLeft: 10,
         marginTop: 2,

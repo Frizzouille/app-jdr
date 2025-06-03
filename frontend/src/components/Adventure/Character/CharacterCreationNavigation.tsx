@@ -16,11 +16,11 @@ const CharacterCreationNavigation = ({
             }}
         >
             <TouchableOpacity onPress={onPrevious} style={styles.button}>
-                <Text>Précédent</Text>
+                <Text style={styles.buttonText}>Précédent</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={onNext} style={styles.button}>
-                <Text>Suivant</Text>
+                <Text style={styles.buttonText}>Suivant</Text>
             </TouchableOpacity>
         </View>
     );
@@ -28,13 +28,15 @@ const CharacterCreationNavigation = ({
 
 const styles = StyleSheet.create({
     button: {
-        color: '#fff',
-        backgroundColor: '#ccc',
+        backgroundColor: '#05a85c',
         padding: 12,
         borderRadius: 8,
         flex: 1,
         marginRight: 8,
         alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
     },
 });
 

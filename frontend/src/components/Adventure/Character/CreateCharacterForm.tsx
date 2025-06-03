@@ -42,6 +42,9 @@ export default function CharacterCreationScreen({
         {},
     );
 
+    const validNext =
+        (step === 0 && characterData.race) ||
+        (step === 1 && characterData.classes);
     const APIDnD = axios.create({
         baseURL: 'https://www.dnd5eapi.co',
         timeout: 5000,
@@ -83,10 +86,10 @@ export default function CharacterCreationScreen({
             )}
             <CharacterCreationNavigation
                 onPrevious={() => {
-                    setStep(step - 1);
+                    if (step !== 0) setStep(step - 1);
                 }}
                 onNext={() => {
-                    setStep(step + 1);
+                    if (validNext) setStep(step + 1);
                 }}
             />
         </ScrollView>

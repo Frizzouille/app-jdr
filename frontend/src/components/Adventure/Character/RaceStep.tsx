@@ -164,6 +164,18 @@ export default function RaceStep({
                             </Text>
                         </View>
                     )}
+
+                    {/* Traits */}
+                    {selectedRaceDetails.traits?.length > 0 && (
+                        <View style={styles.detailSection}>
+                            <Text style={styles.sectionTitle}>Traits:</Text>
+                            <Text style={styles.detailDescription}>
+                                {selectedRaceDetails.traits
+                                    .map((val: { name: string }) => val.name)
+                                    .join(', ')}
+                            </Text>
+                        </View>
+                    )}
                 </View>
             )}
         </View>
@@ -201,7 +213,7 @@ const styles = StyleSheet.create({
         marginTop: 2,
     },
     detailDescription: {
-        fontSize: 12,
+        fontSize: 14,
         color: '#666',
         marginLeft: 10,
         marginTop: 2,
